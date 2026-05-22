@@ -55,7 +55,11 @@ const fixturesDir = join(here, "fixtures");
 const cases = [];
 for (const bucket of Object.keys(EXPECTED)) {
   const dir = join(fixturesDir, bucket);
-  for (const name of readdirSync(dir)) {
+  const names = readdirSync(dir, { withFileTypes: true })
+    .filter((e) => e.isFile())
+    .map((e) => e.name)
+    .sort();
+  for (const name of names) {
     const key = `${bucket}/${name}`;
     const expectedAllowed = OVERRIDES[key] ?? EXPECTED[bucket];
     cases.push({ bucket, name, path: join(dir, name), expectedAllowed });
