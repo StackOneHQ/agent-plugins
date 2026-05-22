@@ -5,6 +5,9 @@
   "private": true,
   "type": "module",
   "license": "MIT",
+  "scripts": {
+    "test": "node --test --test-force-exit tests/*.test.mjs"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/StackOneHQ/agent-plugins.git"
