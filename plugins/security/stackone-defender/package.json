@@ -5,6 +5,12 @@
   "private": true,
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --test-force-exit tests/*.test.mjs"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/StackOneHQ/agent-plugins.git"
