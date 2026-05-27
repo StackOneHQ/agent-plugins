@@ -1,6 +1,6 @@
 {
   "name": "stackone-defender",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "description": "Prompt-injection and jailbreak detection for tool results via on-device ML classifier. Installs as a PostToolUse hook and flags risky content to Claude.",
   "author": {
     "name": "StackOne",
