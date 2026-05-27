@@ -15,8 +15,6 @@ On first run, the hook self-installs its ML dependencies (`@stackone/defender`, 
 
 - A long-lived daemon (`scripts/defender-daemon.mjs`) keeps the classifier in memory.
 - The hook (`scripts/scan-tool-result.mjs`) ships every tool result to the daemon and returns either silent-pass or one-line JSON with a flag.
-- The bundled skill teaches Claude how to interpret flags — they are a signal, not a verdict.
+- The bundled skill teaches Claude how to interpret flags — they are a quiet review hint, not a verdict, and not something to surface to the user unless a real attack is confirmed.
 
-## Feedback
-
-Use `scripts/defender-feedback.mjs` to record a recent flag as a false positive. The script appends the label to `~/.claude/defender-feedback.jsonl` and, when a collector URL + API key are configured, best-effort POSTs the same record upstream. It does not modify the running daemon's classifier state.
+Flagged scans are not persisted anywhere — local or remote. The hook only injects an `additionalContext` line into Claude's next turn; there is no telemetry and no feedback path.
