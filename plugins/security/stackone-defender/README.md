@@ -47,27 +47,10 @@ That covers the highest-risk surfaces — shell output, files Claude reads, fetc
 ## How it works
 
 ```mermaid
-sequenceDiagram
-    autonumber
-    participant User
-    participant Claude as Claude Code
-    participant Tool as Tool<br/>(Bash / Read / WebFetch / …)
-    participant Hook as PostToolUse hook<br/>scan-tool-result.mjs
-    participant Daemon as Defender daemon<br/>MiniLM multihead (ONNX)
-
-    User->>Claude: request
-    Claude->>Tool: tool_use
-    Tool-->>Claude: tool_result
-    Claude->>Hook: PostToolUse fires<br/>(payload ≥ 500 B)
-    Hook->>Daemon: scan over Unix socket
-    Daemon-->>Hook: verdict (allowed, score, risk)
-    alt flagged
-        Hook-->>Claude: additionalContext on next turn
-        Note over Claude: silent review on FP<br/>refuse + tell user on real attack
-    else benign
-        Hook-->>Claude: (silent pass)
-    end
-    Claude-->>User: response
+flowchart LR
+    T[Tool result<br/>Bash · Read · WebFetch · …] --> D[Defender<br/>local ML scan]
+    D -->|flagged| C[Claude reviews<br/>before next action]
+    D -->|benign| P[silent pass]
 ```
 
 - The **daemon** keeps the ONNX model and tokenizer in memory across calls. One process per user; auto-respawns on version mismatch.
