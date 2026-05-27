@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "StackOne agent plugins — integration infrastructure for AI agents with 200+ connectors, MCP, A2A, SDKs, and prompt injection defense. One plugin per skill.",
-    "version": "2.5.0",
+    "version": "3.0.0",
     "homepage": "https://stackone.com",
     "repository": "https://github.com/StackOneHQ/agent-plugins",
     "pluginRoot": "./plugins"
@@ -17,9 +17,15 @@
       "name": "stackone-platform",
       "source": "./plugins/integrations/stackone-platform",
       "description": "Platform operations — API keys, accounts, logs, debugging, webhook configuration.",
-      "version": "2.5.0",
+      "version": "3.0.0",
       "category": "integrations",
-      "tags": ["stackone", "platform", "api-keys", "accounts", "webhooks"],
+      "tags": [
+        "stackone",
+        "platform",
+        "api-keys",
+        "accounts",
+        "webhooks"
+      ],
       "author": {
         "name": "StackOne",
         "email": "engineering@stackone.com"
@@ -29,9 +35,15 @@
       "name": "stackone-connect",
       "source": "./plugins/integrations/stackone-connect",
       "description": "Account linking with Connect Sessions and the Hub React component.",
-      "version": "2.5.0",
+      "version": "3.0.0",
       "category": "integrations",
-      "tags": ["stackone", "connect", "account-linking", "oauth", "hub"],
+      "tags": [
+        "stackone",
+        "connect",
+        "account-linking",
+        "oauth",
+        "hub"
+      ],
       "author": {
         "name": "StackOne",
         "email": "engineering@stackone.com"
@@ -41,9 +53,17 @@
       "name": "stackone-agents",
       "source": "./plugins/integrations/stackone-agents",
       "description": "Build AI agents that call StackOne-linked accounts via TypeScript/Python SDK, MCP, or A2A.",
-      "version": "2.5.0",
+      "version": "3.0.0",
       "category": "integrations",
-      "tags": ["stackone", "ai-agents", "mcp", "a2a", "openai", "langchain", "sdk"],
+      "tags": [
+        "stackone",
+        "ai-agents",
+        "mcp",
+        "a2a",
+        "openai",
+        "langchain",
+        "sdk"
+      ],
       "author": {
         "name": "StackOne",
         "email": "engineering@stackone.com"
@@ -53,9 +73,17 @@
       "name": "stackone-connectors",
       "source": "./plugins/integrations/stackone-connectors",
       "description": "Discover StackOne's 200+ connectors and 9,000+ actions across HRIS, ATS, CRM, LMS, and more.",
-      "version": "2.5.0",
+      "version": "3.0.0",
       "category": "integrations",
-      "tags": ["stackone", "connectors", "hris", "ats", "crm", "lms", "discovery"],
+      "tags": [
+        "stackone",
+        "connectors",
+        "hris",
+        "ats",
+        "crm",
+        "lms",
+        "discovery"
+      ],
       "author": {
         "name": "StackOne",
         "email": "engineering@stackone.com"
@@ -65,9 +93,14 @@
       "name": "stackone-cli",
       "source": "./plugins/integrations/stackone-cli",
       "description": "Build and deploy custom StackOne connectors using the CLI and Connector Engine.",
-      "version": "2.5.0",
+      "version": "3.0.0",
       "category": "integrations",
-      "tags": ["stackone", "cli", "connector-development", "custom-connectors"],
+      "tags": [
+        "stackone",
+        "cli",
+        "connector-development",
+        "custom-connectors"
+      ],
       "author": {
         "name": "StackOne",
         "email": "engineering@stackone.com"
@@ -77,9 +110,14 @@
       "name": "stackone-unified-connectors",
       "source": "./plugins/integrations/stackone-unified-connectors",
       "description": "Build unified/schema-based connectors that transform provider data into standardized schemas.",
-      "version": "2.5.0",
+      "version": "3.0.0",
       "category": "integrations",
-      "tags": ["stackone", "unified-connectors", "schema", "field-mapping"],
+      "tags": [
+        "stackone",
+        "unified-connectors",
+        "schema",
+        "field-mapping"
+      ],
       "author": {
         "name": "StackOne",
         "email": "engineering@stackone.com"
@@ -89,9 +127,17 @@
       "name": "stackone-defender",
       "source": "./plugins/security/stackone-defender",
       "description": "Prompt-injection and jailbreak detection for tool results via on-device ML classifier.",
-      "version": "2.5.0",
+      "version": "3.0.0",
       "category": "security",
-      "tags": ["stackone", "defender", "prompt-injection", "jailbreak", "security", "ml", "hook"],
+      "tags": [
+        "stackone",
+        "defender",
+        "prompt-injection",
+        "jailbreak",
+        "security",
+        "ml",
+        "hook"
+      ],
       "author": {
         "name": "StackOne",
         "email": "engineering@stackone.com"
