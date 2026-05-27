@@ -4,9 +4,11 @@ On-device prompt-injection and jailbreak detection for Claude Code. Runs as a `P
 
 No network calls, no telemetry, no cloud dependency — the entire classifier runs on your machine.
 
+**Links** · [Product page](https://www.stackone.com/platform/prompt-injection-guard/) · [`@stackone/defender` on npm](https://www.npmjs.com/package/@stackone/defender) (the underlying library this plugin wraps)
+
 ## Why
 
-LLM agents act on whatever lands in their context window. A malicious payload tucked into a fetched webpage, a poisoned issue comment, or a doctored support ticket can talk the agent into running commands the user never asked for. This class of attack is called *indirect prompt injection*, and it bypasses any defense that only watches user input.
+LLM agents act on whatever lands in their context window. A malicious payload tucked into a fetched webpage, a poisoned issue comment, or a doctored support ticket can talk the agent into running commands the user never asked for. This class of attack is called *indirect prompt injection*, and it bypasses any defense that only watches user input. More background and benchmarks live on the [StackOne Prompt Injection Guard product page](https://www.stackone.com/platform/prompt-injection-guard/).
 
 Defender sits in the agent loop and scans **tool outputs** — the path most injection payloads ride in on — using an on-device multi-head ML classifier trained on real attack and benign-content data. When the classifier flags something, Defender doesn't block the call or interrupt you; it injects a one-line hint into Claude's next turn so the model can decide.
 
@@ -14,14 +16,23 @@ In our own evaluation against `claude-haiku-4-5` across 8 published-archetype at
 
 ## Install
 
+Requires Node ≥ 22.
+
+**1. Add the StackOne marketplace** to Claude Code. This makes all StackOne plugins discoverable in `/plugin install`.
+
 ```bash
 /plugin marketplace add stackonehq/agent-plugins
+```
+
+**2. Install the Defender plugin.** This registers the PostToolUse hook and the bundled skill.
+
+```bash
 /plugin install stackone-defender@stackone-agent-plugins
 ```
 
-On first run the hook self-installs its ML dependencies (`@stackone/defender`, `onnxruntime-node`, `@huggingface/transformers`, `fasttext.wasm`) into the plugin's own `node_modules`. Subsequent runs reuse a persistent daemon over a Unix socket at `~/.claude/defender.sock`, so per-call latency stays in the low milliseconds.
+**3. Trigger the first run.** Use any tool that returns more than ~500 bytes (e.g. `Read` a file, or `WebFetch` any URL). The hook self-installs its ML dependencies (`@stackone/defender`, `onnxruntime-node`, `@huggingface/transformers`, `fasttext.wasm`) into the plugin's own `node_modules` on this first call. Expect a one-time 5–10 second pause; subsequent calls reuse a persistent daemon over `~/.claude/defender.sock` and complete in low milliseconds.
 
-Requires Node ≥ 22.
+That's it — there's no API key, no config file to edit, and no account to create. Defender is active from the next tool call onward.
 
 ## What gets scanned
 
