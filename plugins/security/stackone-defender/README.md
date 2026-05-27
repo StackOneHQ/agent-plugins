@@ -52,7 +52,7 @@ flowchart LR
 ```
 
 - The **daemon** keeps the ONNX model and tokenizer in memory across calls. One process per user; auto-respawns on version mismatch.
-- The **hook** is a thin stdin/stdout client. Connects to the daemon over a Unix domain socket, ships the tool output, waits up to 5 seconds for a verdict, and falls back to silent-pass if anything goes wrong (timeout, daemon down, install failed). Never blocks the agent.
+- The **hook** is a thin stdin/stdout client. Connects to the daemon over a Unix domain socket, ships the tool output, waits up to 5 seconds for a verdict, and falls back to silent-pass if anything goes wrong (timeout, daemon down, install failed). Time-bounded and fails open: a hung daemon will delay the next turn by at most the scan timeout (and up to ~6 seconds on cold start while the daemon spawns), then the agent proceeds as if Defender weren't installed.
 - The **skill** (`skills/stackone-defender/SKILL.md`) is loaded into Claude's context and governs how the model reacts to flags. Default behavior: silent review on suspected false positives, refuse-and-tell-user on confirmed attacks, no flag-related noise otherwise.
 
 ## What you experience
@@ -88,13 +88,13 @@ Default thresholds and the model path live in `scripts/defender-daemon.config.js
 
 `enableTier1` is off by default. Tier 1 (regex patterns) is brittle and high-FP on prose discussing attacks. Tier 2 (the multihead ONNX classifier with Static Frequency Estimation preprocessing) is the sole decision-maker.
 
-Restart your shell to pick up config changes; the daemon reloads on next spawn.
+The daemon reads this config only on startup, and it is a detached long-lived process that outlives your shell. To pick up config changes, stop the running daemon (look up the PID in `~/.claude/defender-daemon.json` and `kill` it, or delete `~/.claude/defender.sock` plus `~/.claude/defender-daemon.json`) and the next tool call will spawn a fresh daemon with the new config.
 
 ## Privacy
 
 - **No telemetry.** No analytics, no usage pings, no "phone home."
 - **No network egress.** The classifier is a local ONNX file shipped with the plugin. Inference is fully on-device.
-- **No persistence.** Flagged scans are not written to disk, local or remote. The only durable artifact is the daemon's stderr log at `~/.claude/defender-daemon.log` (rotated, capped at a few MB).
+- **No persistence of scan contents.** The tool outputs Defender scans are never written to disk, local or remote. The plugin does write some operational metadata to `~/.claude/` (daemon PID/version state, rotated daemon stderr log, a transient client error log; see the file table below for the full list), but none of it contains the scanned payload itself.
 - **No feedback path.** There is no upstream collector, no FP labeling channel, no model-update mechanism. Updates ship via new plugin versions.
 
 ## Files in your home directory
