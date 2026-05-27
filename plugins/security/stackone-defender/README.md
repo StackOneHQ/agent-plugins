@@ -12,8 +12,6 @@ LLM agents act on whatever lands in their context window. A malicious payload tu
 
 Defender sits in the agent loop and scans **tool outputs** (the path most injection payloads ride in on) using an on-device multi-head ML classifier trained on real attack and benign-content data. When the classifier flags something, Defender doesn't block the call or interrupt you; it injects a one-line hint into Claude's next turn so the model can decide.
 
-In our own evaluation against `claude-haiku-4-5` across 8 published-archetype attack fixtures (curl-pipe-sh README hooks, false-authority overrides, DNS side-channel, zero-width unicode, memory poisoning, etc.), baseline attack success was **13.75%**. With Defender's hint in context, it dropped to **0%**. Detail: `docs/read-exfil-probe-haiku-defender-report.md` in `StackOneHQ/stackone-agent-redteaming`.
-
 ## Install
 
 Requires Node ≥ 22.
