@@ -262,11 +262,18 @@ function scanViaDaemon(payload, toolName) {
       logClientError("scan timeout");
       finish(null);
     }, SCAN_TIMEOUT_MS);
-    socket.setTimeout(CONNECT_TIMEOUT_MS, () => {
-      logClientError("socket idle timeout");
+    // Use socket.setTimeout for the pre-connect window only: net.Socket.setTimeout
+    // sets an *idle* timer that also applies after connect, so leaving it at
+    // CONNECT_TIMEOUT_MS would abort scans that take >1.5s without producing
+    // data — narrowing the effective budget far below SCAN_TIMEOUT_MS. Clear
+    // it on connect; the outer `timer` enforces the overall scan budget.
+    socket.setTimeout(CONNECT_TIMEOUT_MS);
+    socket.once("timeout", () => {
+      logClientError("socket connect timeout");
       finish(null);
     });
     socket.on("connect", () => {
+      socket.setTimeout(0);
       socket.write(JSON.stringify({ type: "scan", id: 1, payload, toolName }) + "\n");
     });
     socket.on("data", (chunk) => {

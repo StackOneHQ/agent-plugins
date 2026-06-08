@@ -10,7 +10,7 @@ No network calls, no telemetry, no cloud dependency. The entire classifier runs 
 
 LLM agents act on whatever lands in their context window. A malicious payload tucked into a fetched webpage, a poisoned issue comment, or a doctored support ticket can talk the agent into running commands the user never asked for. This class of attack is called *indirect prompt injection*, and it bypasses any defense that only watches user input.
 
-Our own [read-exfil probe on Gemini 2.5 Flash](../../../../stackone-redteaming/docs/2026-05-28-read-exfil-probe-gemini-defender-report.md) (the model class Antigravity ships on) measured a baseline 25.8% attack success rate halved to 12.5% by the exact Defender hint this plugin emits. This is the largest absolute risk reduction we've measured across any model family.
+Our internal read-exfil probe against Gemini 2.5 Flash (the model class Antigravity ships on) measured a baseline 25.8% attack success rate halved to 12.5% by the exact Defender hint this plugin emits — the largest absolute risk reduction we've measured across any model family.
 
 Defender sits in the agent loop and scans **tool outputs** (the path most injection payloads ride in on) using an on-device multi-head ML classifier trained on real attack and benign-content data. When the classifier flags something, Defender doesn't block the call or interrupt you; it injects a one-line hint into the agent's next turn so the model can decide.
 
