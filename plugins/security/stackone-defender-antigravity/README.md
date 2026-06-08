@@ -2,7 +2,7 @@
 
 On-device prompt-injection and jailbreak detection for Google's Antigravity CLI. Runs as a `PostToolUse` hook, scans every tool result with a local ML classifier, and quietly cues the agent to review anything risky before acting on it.
 
-No network calls, no telemetry, no cloud dependency. The entire classifier runs on your machine.
+No telemetry, no cloud dependency, and no network egress during scanning. The classifier runs entirely on your machine. (First-run install fetches the ML dependencies from npm; subsequent scans are fully offline.)
 
 **Links** · Built into StackOne, [learn more](https://www.stackone.com/platform/prompt-injection-guard/) · [`@stackone/defender` on npm](https://www.npmjs.com/package/@stackone/defender) (the underlying library this plugin wraps) · Claude Code variant: [`stackone-defender`](../stackone-defender/)
 
@@ -123,7 +123,7 @@ All five are local-only. None get written to until Defender actually fires.
 
 ## Troubleshooting
 
-**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd $CLAUDE_PLUGIN_ROOT && npm install` manually.
+**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd ~/.gemini/config/plugins/stackone-defender-antigravity && npm install` manually. (`$CLAUDE_PLUGIN_ROOT` is set by the host CLI at hook-runtime and is not available in your interactive shell.)
 
 **Hook receives an unexpected stdin shape.** Antigravity's `PostToolHookArgs` evolved across CLI versions. The hook accepts both proto3-camelCase (`toolName`, `toolResult`, `toolOutput`) and the snake_case fallbacks (`tool_name`, `tool_output`, `tool_response`). If Defender silently does nothing on every call, capture the stdin via a wrapper script and open an issue with the field names you see.
 
