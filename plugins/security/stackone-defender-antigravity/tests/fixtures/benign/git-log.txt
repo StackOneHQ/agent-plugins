@@ -1,0 +1,42 @@
+commit a1827ed87b81d33adc6c7b7e6bebca04cefa6152
+Author: stackone-bot <bot@stackone.com>
+Date:   Mon May 5 15:00:00 2026 +0000
+
+    chore(main): release stackone 2.4.0 (#14)
+
+commit b65ca10c4f29e9a8d3f1e2c5b7a9d4e6f8c0a1b3
+Author: Hisku <hiskias@stackone.com>
+Date:   Thu May 1 11:23:45 2026 +0000
+
+    feat(ENG-70): enable SFE preprocessing to reduce Bash false positives (#15)
+
+    Enables Defender's FastText structural-field-extraction preprocessor to
+    drop metadata-shaped fields before Tier 2 ML classification. Reduces a
+    known false-positive class on Bash output containing file listings,
+    JSON snippets, and ls -lh output without affecting true-positive rate
+    on prompt injection attacks.
+
+commit 31c6f5a9e7b3d8f1c4a6b2e5d8f1a4c7e0b3d6f9
+Author: Hisku <hiskias@stackone.com>
+Date:   Tue Apr 22 09:14:22 2026 +0000
+
+    fix: self-install deps from script location, remove SessionStart hook (#13)
+
+    Resolves plugin root from import.meta.url instead of CLAUDE_PLUGIN_ROOT
+    to prevent environment variable tampering. Reinstalls dependencies if
+    any from package.json are missing on the disk cache.
+
+commit 6b178d9c8a1f4b7d3e0c2a5f8b1d4e7c0a3f6b9e
+Author: stackone-bot <bot@stackone.com>
+Date:   Mon Apr 14 10:00:00 2026 +0000
+
+    chore: set up Release Please and bump to 2.3.1 (#12)
+
+commit 9511434b2c5e8f1d4a7c0b3e6f9d2c5a8b1e4f7d
+Author: Hisku <hiskias@stackone.com>
+Date:   Fri Apr 4 14:32:11 2026 +0000
+
+    feat: extend PostToolUse matcher to cover MCP tools (#11)
+
+    Adds mcp__.* to the matcher pattern so MCP tool responses are also
+    scanned for prompt injection attacks before reaching Claude.

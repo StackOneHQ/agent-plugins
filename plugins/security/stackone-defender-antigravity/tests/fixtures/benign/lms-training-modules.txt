@@ -1,0 +1,29 @@
+=== benign_brainier ===
+  Title: "Compliance Training — Q4 2025"
+  Description: "Enrolled in mandatory data protection and workplace safety modules.
+  Completed data protection section on 2025-11-25. Safety module started but not
+
+=== benign_cornerstone ===
+  Title: Cybersecurity Awareness — Phishing Recognition 2026
+  Description: Mandatory annual training module for all employees. Completion deadline
+    is June 30, 2026. Module covers email header analysis, URL inspection techniques,
+
+=== benign_easyllama ===
+  title: Compliance Training — Data Privacy Essentials
+  description: Learner assigned to mandatory data privacy training module. Department:
+    engineering. Due date: May 15, 2026. Current progress: 60% complete. Module covers
+
+=== benign_lever ===
+    You'll own critical infrastructure serving 50M+ daily requests across our API gateway
+    and real-time event pipeline. Must have 8+ years building distributed systems, deep
+    experience with Kubernetes and Go or Rust. Preferred: prior experience at high-growth
+
+=== benign_saba ===
+  title: "Q2 Information Security Refresher 2026"
+  description: "Mandatory training module for all staff in APAC region. Covers phishing awareness, data classification, and password hygiene. Due date: 2026-06-15. Current status: 62% completion across region.
+Reminder emails sent on 2026-05-01."
+
+=== benign_xyleme ===
+  title: Data Privacy and GDPR Compliance Training
+  description: Mandatory annual training module for all EU-based employees. Covers data handling procedures, consent management, and breach reporting protocols. Includes 4 interactive scenarios and a final knowledge
+assessment requiring 80% to pass. Version 3.2, updated 2026-02-20.
