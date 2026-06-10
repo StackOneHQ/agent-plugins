@@ -21,6 +21,7 @@ Agent plugins made by [StackOne](https://stackone.com) — integration infrastru
 /plugin install stackone-cli@stackone-agent-plugins
 /plugin install stackone-unified-connectors@stackone-agent-plugins
 /plugin install stackone-defender@stackone-agent-plugins
+/plugin install context-mode@stackone-agent-plugins
 ```
 
 ### Any agent (via Skills CLI)
@@ -43,6 +44,7 @@ npx skills add stackonehq/agent-plugins@stackone-agents
 | [`stackone-cli`](plugins/integrations/stackone-cli/) | Integrations | Custom connector development and deployment | "Build a custom connector", "deploy my connector" |
 | [`stackone-connectors`](plugins/integrations/stackone-connectors/) | Integrations | Discover connectors, actions, and integration capabilities | "Which providers does StackOne support?" |
 | [`stackone-unified-connectors`](plugins/integrations/stackone-unified-connectors/) | Integrations | Build unified connectors that transform provider data into standardized schemas | "Start unified build for [provider]", "map fields to schema" |
+| [`context-mode`](plugins/integrations/context-mode/) | Integrations | Save 40-60% of agent context — auto-index tool output into FTS5, persist session state through compaction, search across sessions | "Install context-mode", "save context window", "index tool output", "session persistence", "ctx search" |
 | [`stackone-defender`](plugins/security/stackone-defender/) | Security | Detect prompt injection and jailbreak attacks in tool results using local ML | "Scan for prompt injection", "is this text safe?", "protect my agent" |
 
 Each plugin includes a focused skill, step-by-step workflows, concrete examples, and troubleshooting.
@@ -60,7 +62,8 @@ agent-plugins/
     │   ├── stackone-agents/
     │   ├── stackone-connectors/
     │   ├── stackone-cli/
-    │   └── stackone-unified-connectors/
+    │   ├── stackone-unified-connectors/
+    │   └── context-mode/              # context window optimizer — Pi extension + MCP tools
     └── security/
         └── stackone-defender/    # ships its own hooks/, scripts/, package.json
 ```

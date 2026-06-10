@@ -1,0 +1,23 @@
+{
+  "name": "context-mode",
+  "version": "1.0.0",
+  "description": "Save 40-60% of agent context window — auto-index tool output, persist session state through compaction, and search across sessions via FTS5 knowledge base. Works with Pi, Claude Code, Cursor, Codex, and 15+ agent platforms.",
+  "author": {
+    "name": "mksglu",
+    "url": "https://github.com/mksglu"
+  },
+  "homepage": "https://pi.dev/packages/context-mode",
+  "repository": "https://github.com/mksglu/context-mode",
+  "license": "Elastic-2.0",
+  "keywords": [
+    "context-mode",
+    "context-window",
+    "session-persistence",
+    "fts5",
+    "knowledge-base",
+    "tool-output",
+    "compaction",
+    "mcp",
+    "hook"
+  ]
+}
