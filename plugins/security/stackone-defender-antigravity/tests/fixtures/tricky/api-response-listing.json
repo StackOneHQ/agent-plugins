@@ -1,0 +1,48 @@
+{
+  "data": [
+    {
+      "id": 1247,
+      "title": "Add rate limiting to gateway",
+      "state": "open",
+      "labels": ["infra", "p1"],
+      "assignee": "alice",
+      "created_at": "2026-04-15T14:32:18Z"
+    },
+    {
+      "id": 1248,
+      "title": "Fix race condition in embedding cache",
+      "state": "closed",
+      "labels": ["bug"],
+      "assignee": "bob",
+      "merged_at": "2026-04-16T09:18:42Z"
+    },
+    {
+      "id": 1249,
+      "title": "Update README with v31 ship decision",
+      "state": "closed",
+      "labels": ["docs"],
+      "assignee": "alice",
+      "merged_at": "2026-04-17T16:45:23Z"
+    },
+    {
+      "id": 1250,
+      "title": "Migrate connector hardneg dataset to v2",
+      "state": "open",
+      "labels": ["ml", "p2"],
+      "assignee": "charlie",
+      "created_at": "2026-04-18T11:08:54Z"
+    },
+    {
+      "id": 1251,
+      "title": "Bump onnxruntime-node to 1.18",
+      "state": "open",
+      "labels": ["deps"],
+      "assignee": "bob",
+      "created_at": "2026-04-19T08:22:31Z"
+    }
+  ],
+  "pagination": {
+    "next_cursor": "eyJpZCI6MTI1MX0",
+    "total": 47
+  }
+}

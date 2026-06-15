@@ -1,0 +1,24 @@
+{
+  "name": "stackone-defender-antigravity",
+  "version": "2.5.0",
+  "description": "On-device prompt-injection detection for Antigravity CLI tool results.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --test-force-exit tests/*.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StackOneHQ/agent-plugins.git"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.8.1",
+    "@stackone/defender": "~0.7.0",
+    "fasttext.wasm": "^1.0.0",
+    "onnxruntime-node": "^1.24.3"
+  }
+}

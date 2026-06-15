@@ -1,0 +1,14 @@
+{
+  "blockHighRisk": true,
+  "enableTier1": false,
+  "useSfe": true,
+  "tier2Config": {
+    "onnxModelPath": "${defenderRoot}/models/minilm-multihead-v5",
+    "temperatureT": 2.41,
+    "highRiskThreshold": 0.64,
+    "multihead": {
+      "mainThreshold": 0.64,
+      "auxThreshold": 0.458
+    }
+  }
+}

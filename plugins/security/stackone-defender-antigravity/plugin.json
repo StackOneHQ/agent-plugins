@@ -1,0 +1,5 @@
+{
+  "name": "stackone-defender-antigravity",
+  "version": "2.5.0",
+  "description": "On-device prompt-injection and jailbreak detection for Antigravity CLI tool results. Installs as a PostToolUse hook and surfaces flagged content to the agent."
+}

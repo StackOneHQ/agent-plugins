@@ -2,7 +2,7 @@
 
 On-device prompt-injection and jailbreak detection for Claude Code. Runs as a `PostToolUse` hook, scans every tool result with a local ML classifier, and quietly cues Claude to review anything risky before acting on it.
 
-No network calls, no telemetry, no cloud dependency. The entire classifier runs on your machine.
+No telemetry, no cloud dependency, and no network egress during scanning. The classifier runs entirely on your machine. (First-run install fetches the ML dependencies from npm; subsequent scans are fully offline.)
 
 **Links** · Built into StackOne, [learn more](https://www.stackone.com/platform/prompt-injection-guard/) · [`@stackone/defender` on npm](https://www.npmjs.com/package/@stackone/defender) (the underlying library this plugin wraps)
 
@@ -114,7 +114,7 @@ All five are local-only. None of them get written to until Defender actually fir
 
 ## Troubleshooting
 
-**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd $CLAUDE_PLUGIN_ROOT && npm install` manually.
+**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd ~/.claude/plugins/cache/<marketplace>/stackone-defender/<version> && npm install` manually (or `cd` into the plugin directory shown by `/plugin info stackone-defender`). `$CLAUDE_PLUGIN_ROOT` is set by Claude Code at hook-runtime and is not available in your interactive shell.
 
 **"Slow first scan."** Cold start spawns the daemon and warms up the ONNX session. Steady-state latency is a few milliseconds; first call after a fresh login can take 5–10 seconds.
 
