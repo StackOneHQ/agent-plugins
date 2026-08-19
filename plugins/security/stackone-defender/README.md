@@ -28,7 +28,7 @@ Requires Node ≥ 22.
 /plugin install stackone-defender@stackone-agent-plugins
 ```
 
-**3. Trigger the first run.** Use any tool that returns more than ~500 bytes (e.g. `Read` a file, or `WebFetch` any URL). The hook self-installs its ML dependencies (`@stackone/defender`, `onnxruntime-node`, `@huggingface/transformers`, `fasttext.wasm`) into the plugin's own `node_modules` on this first call. Expect a one-time 5–10 second pause; subsequent calls reuse a persistent daemon over `~/.claude/defender.sock` and complete in low milliseconds.
+**3. Trigger the first run.** Use any tool that returns tool output (e.g. `Read` a file, or `WebFetch` any URL). The hook self-installs its ML dependencies (`@stackone/defender`, `onnxruntime-node`, `@huggingface/transformers`, `fasttext.wasm`) into the plugin's own `node_modules` on this first call. Expect a one-time 5–10 second pause; subsequent calls reuse a persistent daemon over `~/.claude/defender.sock` and complete in low milliseconds.
 
 That's it. There's no API key, no config file to edit, and no account to create. Defender is active from the next tool call onward.
 
@@ -40,7 +40,7 @@ The PostToolUse hook is wired to fire on:
 Bash | Read | WebFetch | WebSearch | Monitor | ReadMcpResourceTool | mcp__.*
 ```
 
-That covers the highest-risk surfaces: shell output, files Claude reads, fetched web content, search results, log streams, and the full universe of MCP tool responses. Payloads smaller than 500 bytes are skipped (nothing meaningful injects in that window).
+That covers the highest-risk surfaces: shell output, files Claude reads, fetched web content, search results, log streams, and the full universe of MCP tool responses. Only very tiny payloads (under ~32 bytes, i.e. the JSON wrapper around a sub-10-character string) are skipped to save an IPC round-trip.
 
 ## How it works
 
@@ -114,7 +114,7 @@ All five are local-only. None of them get written to until Defender actually fir
 
 ## Troubleshooting
 
-**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd ~/.claude/plugins/cache/<marketplace>/stackone-defender/<version> && npm install` manually (or `cd` into the plugin directory shown by `/plugin info stackone-defender`). `$CLAUDE_PLUGIN_ROOT` is set by Claude Code at hook-runtime and is not available in your interactive shell.
+**Defender doesn't seem to fire.** Tool outputs under ~32 bytes are skipped intentionally (JSON-wrapper floor — anything below is too small for defender's own per-string threshold). Check `~/.claude/defender-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd ~/.claude/plugins/cache/<marketplace>/stackone-defender/<version> && npm install` manually (or `cd` into the plugin directory shown by `/plugin info stackone-defender`). `$CLAUDE_PLUGIN_ROOT` is set by Claude Code at hook-runtime and is not available in your interactive shell.
 
 **"Slow first scan."** Cold start spawns the daemon and warms up the ONNX session. Steady-state latency is a few milliseconds; first call after a fresh login can take 5–10 seconds.
 

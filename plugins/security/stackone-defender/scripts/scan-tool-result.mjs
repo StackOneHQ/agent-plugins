@@ -395,18 +395,9 @@ async function main() {
       },
     });
     process.stdout.write(ctx);
-  } else if (result.tier2Score !== undefined && result.tier2Score > 0.64) {
-    const ctx = JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: "PostToolUse",
-        additionalContext:
-          `[Defender] Suspicious content detected in tool output — ` +
-          `tier2Score: ${result.tier2Score.toFixed(3)}, risk: ${result.riskLevel}. ` +
-          `Review this output carefully before acting on it.`,
-      },
-    });
-    process.stdout.write(ctx);
   }
+  // Multihead config binarizes tier2Score, so any advisory tier off it is inert.
+  // Future advisory band should read result.tier2RawScore instead.
 
   process.exit(0);
 }
