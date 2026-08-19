@@ -44,8 +44,11 @@ const SPAWN_WAIT_MS = 6000;
 const SPAWN_POLL_MS = 100;
 const KILL_WAIT_MS = 2000;
 // Skip the IPC entirely for tiny payloads; defender's per-string skip kicks in
-// at 10 chars but doesn't save the round trip.
-const PAYLOAD_SKIP_BELOW_BYTES = 500;
+// at 10 chars, so this only needs to cover the JSON wrapper (~20B) plus a small
+// safety margin. Was 500B until ENG-1961 — that value silently dropped scans on
+// any tool output under ~500 bytes, including short overt attacks. Do not raise
+// without a matching per-string floor for direct hook payloads.
+const PAYLOAD_SKIP_BELOW_BYTES = 32;
 
 function logClientError(msg, extra) {
   try {
