@@ -395,7 +395,7 @@ async function main() {
       },
     });
     process.stdout.write(ctx);
-  } else if (result.tier2Score !== undefined && result.tier2Score > 0.3) {
+  } else if (result.tier2Score !== undefined && result.tier2Score > 0.64) {
     const ctx = JSON.stringify({
       hookSpecificOutput: {
         hookEventName: "PostToolUse",
