@@ -1,6 +1,6 @@
 {
   "name": "stackone-connect",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Account linking with StackOne Connect Sessions and the Hub React component — full flow from session creation to webhook handling.",
   "author": {
     "name": "StackOne",
