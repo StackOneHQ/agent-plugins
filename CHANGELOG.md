@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.0](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.0.0...stackone-agent-plugins-v3.1.0) (2026-08-20)
+
+
+### Features
+
+* **ENG-593:** defender-antigravity - sibling plugin for Google Antigravity CLI ([#26](https://github.com/StackOneHQ/agent-plugins/issues/26)) ([0ab666f](https://github.com/StackOneHQ/agent-plugins/commit/0ab666f77ed52ca36e533554c029ca8b23a0ae94))
+
+
+### Bug Fixes
+
+* **ENG-1961:** defender plugin — payload floor, cue threshold, bump to 0.8.2 ([#30](https://github.com/StackOneHQ/agent-plugins/issues/30)) ([c0b5d7e](https://github.com/StackOneHQ/agent-plugins/commit/c0b5d7ec57a7788ce36bc5120feabcec2ed1858c))
+
 ## [3.0.0](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v2.5.0...stackone-agent-plugins-v3.0.0) (2026-05-27)
 
 
