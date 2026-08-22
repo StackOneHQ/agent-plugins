@@ -1,6 +1,6 @@
 ---
 name: stackone-connectors
-description: Discover StackOne's 200+ connectors and 9,000+ actions across HRIS, ATS, CRM, LMS, ticketing, messaging, documents, IAM, and accounting. Use when user asks "which providers does StackOne support", "what can I do with BambooHR", "recommend an integration for HR", "what actions are available", "how do I call a provider-specific action", or "does StackOne support Workday". Helps choose the right connector and actions for any use case. Do NOT use for building agents (use stackone-agents) or connecting accounts (use stackone-connect).
+description: Discover StackOne's connectors and 30,000+ actions across HR, Sales, Marketing, IT, finance and collaboration tools (Workday, SAP, Oracle, Salesforce, Google, Microsoft and hundreds more). Use when user asks "which providers does StackOne support", "what can I do with BambooHR", "recommend an integration for HR", "what actions are available", "how do I call a provider-specific action", or "does StackOne support Workday". Helps choose the right connector and actions for any use case. Do NOT use for building agents (use stackone-agents) or connecting accounts (use stackone-connect).
 license: MIT
 compatibility: Requires network access to fetch live documentation from docs.stackone.com
 metadata:
@@ -23,7 +23,7 @@ Never assume a connector exists or doesn't exist without checking live docs.
 ### Step 1: Identify the user's integration need
 
 Common patterns:
-- **"What providers do you support for X?"** → Check the category (HRIS, ATS, CRM, etc.) in the connectors page
+- **"What providers do you support for X?"** → Check the category on the connectors page
 - **"Can I do Y with provider Z?"** → Check the provider's supported actions in the API reference
 - **"Recommend an integration for my use case"** → Match the use case to a category, then list available providers
 

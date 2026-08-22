@@ -22,7 +22,7 @@ Do not guess or rely on potentially outdated information in this skill. Always v
 
 ### Step 1: Identify what the user needs
 
-StackOne is integration infrastructure for AI agents — 200+ connectors and 10,000+ production-ready actions across HR, ATS, CRM, LMS, and more. Agents reason, StackOne executes. Common tasks:
+StackOne is integration infrastructure for AI agents — hundreds of connectors and 30,000+ production-ready actions across HR, Sales, Marketing, IT and more. Agents reason, StackOne executes. Common tasks:
 
 - **Setting up**: Creating API keys, understanding auth
 - **Managing accounts**: Listing linked accounts, checking status, debugging connections
