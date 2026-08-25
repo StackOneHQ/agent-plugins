@@ -47,7 +47,7 @@ npx skills add stackonehq/agent-plugins@stackone-agents
 | [`stackone-connectors`](plugins/integrations/stackone-connectors/) | Integrations | Discover connectors, actions, and integration capabilities | "Which providers does StackOne support?" |
 | [`stackone-unified-connectors`](plugins/integrations/stackone-unified-connectors/) | Integrations | Build unified connectors that transform provider data into standardized schemas | "Start unified build for [provider]", "map fields to schema" |
 | [`stackone-defender`](plugins/security/stackone-defender/) | Security | Detect prompt injection and jailbreak attacks in tool results using local ML | "Scan for prompt injection", "is this text safe?", "protect my agent" |
-| [`stackone`](https://github.com/StackOneHQ/stackone-plugin) | Connector | StackOne's hosted MCP server as a plugin: search and run actions across every linked account (maintained in its own repo, also listed for Grok Build, Cursor and Codex) | "Use StackOne to create a Jira issue", "list my connected accounts" |
+| [`stackone`](https://github.com/StackOneHQ/stackone-plugin) | Integrations | StackOne's hosted MCP server as a plugin: search and run actions across every linked account (maintained in its own repo, also listed for Grok Build, Cursor and Codex) | "Use StackOne to create a Jira issue", "list my connected accounts" |
 
 Each plugin includes a focused skill, step-by-step workflows, concrete examples, and troubleshooting.
 
