@@ -1,6 +1,6 @@
 {
   "name": "stackone-unified-connectors",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "Build unified/schema-based connectors that transform provider data into standardized schemas — field mapping, enum mapping, pagination, and scope patterns.",
   "author": {
     "name": "StackOne",
