@@ -4,7 +4,7 @@ StackOne exposes two API surfaces:
 
 ## Actions API (primary)
 
-The Actions API provides access to 10,000+ provider-specific actions across 200+ connectors. Actions are executed via a single endpoint:
+The Actions API provides access to 30,000+ provider-specific actions across hundreds of connectors. Actions are executed via a single endpoint:
 
 ```
 POST https://api.stackone.com/actions/rpc

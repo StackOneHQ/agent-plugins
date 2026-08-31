@@ -6,10 +6,8 @@
     "email": "engineering@stackone.com"
   },
   "metadata": {
-    "description": "StackOne agent plugins — integration infrastructure for AI agents with 200+ connectors, MCP, A2A, SDKs, and prompt injection defense. One plugin per skill.",
+    "description": "StackOne agent plugins: integration infrastructure for AI agents. Skills for building on StackOne (hundreds of connectors, 30,000+ actions, MCP, A2A, SDKs), on-device prompt injection defense, and the hosted StackOne MCP connector plugin. One plugin per skill.",
     "version": "3.1.1",
-    "homepage": "https://stackone.com",
-    "repository": "https://github.com/StackOneHQ/agent-plugins",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -72,16 +70,17 @@
     {
       "name": "stackone-connectors",
       "source": "./plugins/integrations/stackone-connectors",
-      "description": "Discover StackOne's 200+ connectors and 9,000+ actions across HRIS, ATS, CRM, LMS, and more.",
+      "description": "Discover StackOne's connectors and 30,000+ actions across HR, Sales, Marketing, IT, finance and collaboration tools (Workday, SAP, Oracle, Salesforce, Google, Microsoft and hundreds more).",
       "version": "3.1.1",
       "category": "integrations",
       "tags": [
         "stackone",
         "connectors",
-        "hris",
-        "ats",
-        "crm",
-        "lms",
+        "actions",
+        "hr",
+        "sales",
+        "marketing",
+        "it",
         "discovery"
       ],
       "author": {
@@ -137,6 +136,25 @@
         "security",
         "ml",
         "hook"
+      ],
+      "author": {
+        "name": "StackOne",
+        "email": "engineering@stackone.com"
+      }
+    },
+    {
+      "name": "stackone",
+      "source": {
+        "source": "github",
+        "repo": "StackOneHQ/stackone-plugin"
+      },
+      "description": "Give AI agents 30,000+ safe, token-optimized actions across Workday, SAP, Oracle + hundreds more. StackOne's hosted MCP server as a plugin: sign in with your StackOne account and run actions across every linked connector.",
+      "category": "integrations",
+      "tags": [
+        "stackone",
+        "mcp",
+        "connector",
+        "actions"
       ],
       "author": {
         "name": "StackOne",

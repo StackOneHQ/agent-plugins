@@ -1,6 +1,6 @@
 # stackone-connectors
 
-Discover StackOne's 200+ connectors and 9,000+ actions across HRIS, ATS, CRM, LMS, ticketing, messaging, documents, IAM, and accounting.
+Discover StackOne's connectors and 30,000+ actions across HR, Sales, Marketing, IT, finance and collaboration tools (Workday, SAP, Oracle, Salesforce, Google, Microsoft and hundreds more).
 
 ## Install
 

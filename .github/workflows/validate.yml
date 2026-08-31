@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     name: Validate marketplace.json
@@ -16,4 +19,4 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Validate plugin manifests
-        run: npx --yes @anthropic-ai/claude-code plugin validate .
+        run: npx --yes @anthropic-ai/claude-code@2.1.234 plugin validate .
