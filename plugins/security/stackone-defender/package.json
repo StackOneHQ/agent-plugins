@@ -1,6 +1,6 @@
 {
   "name": "stackone-defender",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "On-device prompt-injection detection for Claude Code tool results.",
   "private": true,
   "type": "module",
