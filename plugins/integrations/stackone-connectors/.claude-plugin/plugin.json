@@ -1,6 +1,6 @@
 {
   "name": "stackone-connectors",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Discover StackOne's 200+ connectors and 9,000+ actions across HRIS, ATS, CRM, LMS, ticketing, messaging, documents, IAM, and accounting.",
   "author": {
     "name": "StackOne",
