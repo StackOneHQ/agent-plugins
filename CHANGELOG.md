@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.1.0...stackone-agent-plugins-v3.1.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* **ENG-2103:** pin the antigravity Defender transitive deps ([#33](https://github.com/StackOneHQ/agent-plugins/issues/33)) ([494217b](https://github.com/StackOneHQ/agent-plugins/commit/494217b806e6d1e4fc05fdb7016c456837b200f9))
+
 ## [3.1.0](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.0.0...stackone-agent-plugins-v3.1.0) (2026-08-20)
 
 

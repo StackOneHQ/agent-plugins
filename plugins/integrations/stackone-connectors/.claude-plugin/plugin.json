@@ -1,6 +1,6 @@
 {
   "name": "stackone-connectors",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Discover StackOne's connectors and 30,000+ actions across HR, Sales, Marketing, IT, finance and collaboration tools (Workday, SAP, Oracle, Salesforce, Google, Microsoft and hundreds more).",
   "author": {
     "name": "StackOne",
