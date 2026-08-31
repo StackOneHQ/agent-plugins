@@ -142,6 +142,28 @@
         "name": "StackOne",
         "email": "engineering@stackone.com"
       }
+    },
+    {
+      "name": "context-mode",
+      "source": "./plugins/integrations/context-mode",
+      "description": "Save 40-60% of agent context window — auto-index tool output into FTS5, persist session state through compaction, and search across sessions. Works with Pi, Claude Code, Cursor, Codex, and 15+ platforms.",
+      "version": "1.0.0",
+      "category": "integrations",
+      "tags": [
+        "context-mode",
+        "context-window",
+        "fts5",
+        "knowledge-base",
+        "session-persistence",
+        "compaction",
+        "mcp",
+        "hook",
+        "pi"
+      ],
+      "author": {
+        "name": "mksglu",
+        "url": "https://github.com/mksglu"
+      }
     }
   ]
 }

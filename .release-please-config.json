@@ -50,6 +50,11 @@
         },
         {
           "type": "json",
+          "path": "plugins/integrations/context-mode/.claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
           "path": "plugins/security/stackone-defender/.claude-plugin/plugin.json",
           "jsonpath": "$.version"
         },
