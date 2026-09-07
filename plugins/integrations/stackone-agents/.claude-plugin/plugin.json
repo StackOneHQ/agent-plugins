@@ -1,6 +1,6 @@
 {
   "name": "stackone-agents",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "Build AI agents that call StackOne-linked accounts using TypeScript SDK, Python SDK, MCP server, or A2A protocol. Supports OpenAI, Vercel AI SDK, Claude, LangChain, CrewAI, PydanticAI.",
   "author": {
     "name": "StackOne",

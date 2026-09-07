@@ -1,6 +1,6 @@
 {
   "name": "stackone-platform",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "Manage StackOne resources — API keys, linked accounts, logs, debugging, and webhook configuration.",
   "author": {
     "name": "StackOne",

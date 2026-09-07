@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "StackOne agent plugins: integration infrastructure for AI agents. Skills for building on StackOne (hundreds of connectors, 30,000+ actions, MCP, A2A, SDKs), on-device prompt injection defense, and the hosted StackOne MCP connector plugin. One plugin per skill.",
-    "version": "3.1.1",
+    "version": "3.2.0",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -15,7 +15,7 @@
       "name": "stackone-platform",
       "source": "./plugins/integrations/stackone-platform",
       "description": "Platform operations — API keys, accounts, logs, debugging, webhook configuration.",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "category": "integrations",
       "tags": [
         "stackone",
@@ -33,7 +33,7 @@
       "name": "stackone-connect",
       "source": "./plugins/integrations/stackone-connect",
       "description": "Account linking with Connect Sessions and the Hub React component.",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "category": "integrations",
       "tags": [
         "stackone",
@@ -51,7 +51,7 @@
       "name": "stackone-agents",
       "source": "./plugins/integrations/stackone-agents",
       "description": "Build AI agents that call StackOne-linked accounts via TypeScript/Python SDK, MCP, or A2A.",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "category": "integrations",
       "tags": [
         "stackone",
@@ -71,7 +71,7 @@
       "name": "stackone-connectors",
       "source": "./plugins/integrations/stackone-connectors",
       "description": "Discover StackOne's connectors and 30,000+ actions across HR, Sales, Marketing, IT, finance and collaboration tools (Workday, SAP, Oracle, Salesforce, Google, Microsoft and hundreds more).",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "category": "integrations",
       "tags": [
         "stackone",
@@ -92,7 +92,7 @@
       "name": "stackone-cli",
       "source": "./plugins/integrations/stackone-cli",
       "description": "Build and deploy custom StackOne connectors using the CLI and Connector Engine.",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "category": "integrations",
       "tags": [
         "stackone",
@@ -109,7 +109,7 @@
       "name": "stackone-unified-connectors",
       "source": "./plugins/integrations/stackone-unified-connectors",
       "description": "Build unified/schema-based connectors that transform provider data into standardized schemas.",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "category": "integrations",
       "tags": [
         "stackone",
@@ -126,7 +126,7 @@
       "name": "stackone-defender",
       "source": "./plugins/security/stackone-defender",
       "description": "Prompt-injection and jailbreak detection for tool results via on-device ML classifier.",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "category": "security",
       "tags": [
         "stackone",

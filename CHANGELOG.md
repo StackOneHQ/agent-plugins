@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.1.1...stackone-agent-plugins-v3.2.0) (2026-08-31)
+
+
+### Features
+
+* stackone connector plugin entry, positioning copy, pinned validator ([#31](https://github.com/StackOneHQ/agent-plugins/issues/31)) ([3cadf82](https://github.com/StackOneHQ/agent-plugins/commit/3cadf8272ed50b919c6b5f25ccee70cc277f7371))
+
 ## [3.1.1](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.1.0...stackone-agent-plugins-v3.1.1) (2026-08-31)
 
 
