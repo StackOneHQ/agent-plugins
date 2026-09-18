@@ -39,13 +39,16 @@ import {
   closeSync,
   unlinkSync,
   statSync,
+  writeFileSync,
 } from "fs";
 import { execSync, spawn } from "child_process";
+import { createHash } from "crypto";
 import net from "net";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const pluginRoot = join(scriptDir, "..");
 const DAEMON_SCRIPT = join(scriptDir, "defender-daemon.mjs");
+const DEPS_STAMP_PATH = join(pluginRoot, "node_modules", ".stackone-deps-stamp");
 const SOCKET_PATH = join(homedir(), ".claude", "defender.sock");
 const LOCK_PATH = join(homedir(), ".claude", "defender-daemon.lock");
 const STATE_PATH = join(homedir(), ".claude", "defender-daemon.json");
@@ -91,14 +94,49 @@ function readPluginDeps() {
   }
 }
 
+// Fingerprint of everything that decides which versions end up in node_modules.
+// `overrides` matters as much as `dependencies` here: security pins for transitive
+// packages live there, and a plugin upgrade that only moves a pin would otherwise
+// leave an existing install on the old, vulnerable version.
+function depsFingerprint() {
+  try {
+    const pkg = JSON.parse(readFileSync(join(pluginRoot, "package.json"), "utf8"));
+    return createHash("sha256")
+      .update(JSON.stringify({ dependencies: pkg.dependencies ?? {}, overrides: pkg.overrides ?? {} }))
+      .digest("hex");
+  } catch {
+    return null;
+  }
+}
+
+function readDepsStamp() {
+  try {
+    return readFileSync(DEPS_STAMP_PATH, "utf8").trim();
+  } catch {
+    return null;
+  }
+}
+
 function ensureDepsInstalled() {
   const deps = readPluginDeps();
   const missing = deps.find((d) => !existsSync(join(pluginRoot, "node_modules", d)));
-  if (!missing) return true;
+  const fingerprint = depsFingerprint();
+  // Reinstall when a direct dependency is absent, or when dependencies/overrides have
+  // moved since the last install. A null fingerprint means package.json is unreadable,
+  // in which case fall back to the presence check alone rather than reinstalling forever.
+  const stale = fingerprint !== null && readDepsStamp() !== fingerprint;
+  if (!missing && !stale) return true;
   try {
     execSync(`npm install --prefix "${pluginRoot}" --silent --no-audit --no-fund`, {
       timeout: 120_000,
     });
+    if (fingerprint !== null) {
+      try {
+        writeFileSync(DEPS_STAMP_PATH, fingerprint);
+      } catch {
+        // A missing stamp only costs a redundant install next run.
+      }
+    }
     return true;
   } catch (err) {
     process.stderr.write(`[Defender] Dependency install failed — scanner disabled: ${err.message}\n`);
