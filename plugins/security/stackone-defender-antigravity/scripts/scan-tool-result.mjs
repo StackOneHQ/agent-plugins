@@ -257,7 +257,9 @@ function waitForSocket(deadline) {
 
 async function ensureDaemonRunning() {
   const expectedVersion = getExpectedDefenderVersion();
-  const expectedStamp = readDepsStamp();
+  // Computed, not read back from the stamp file: a failed stamp write must not
+  // quietly disable daemon validation and leave the old tree serving scans.
+  const expectedStamp = depsFingerprint();
   const running = getRunningDaemonInfo();
   if (running) {
     if (!processAlive(running.pid)) {
