@@ -49,6 +49,8 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const pluginRoot = join(scriptDir, "..");
 const DAEMON_SCRIPT = join(scriptDir, "defender-daemon.mjs");
 const DEPS_STAMP_PATH = join(pluginRoot, "node_modules", ".stackone-deps-stamp");
+// Per-plugin, so the two Defender variants never serialise against each other.
+const DEPS_LOCK_PATH = join(pluginRoot, ".stackone-deps-install.lock");
 const SOCKET_PATH = join(homedir(), ".claude", "defender.sock");
 const LOCK_PATH = join(homedir(), ".claude", "defender-daemon.lock");
 const STATE_PATH = join(homedir(), ".claude", "defender-daemon.json");
@@ -125,22 +127,46 @@ function readDepsStamp() {
   }
 }
 
+function depsUpToDate(missing) {
+  if (missing) return false;
+  const fingerprint = depsFingerprint();
+  // A null fingerprint means package.json is unreadable. Fall back to the presence
+  // check alone rather than reinstalling on every invocation.
+  return fingerprint === null || readDepsStamp() === fingerprint;
+}
+
 function ensureDepsInstalled() {
   const deps = readPluginDeps();
   const missing = deps.find((d) => !existsSync(join(pluginRoot, "node_modules", d)));
-  const fingerprint = depsFingerprint();
-  // Reinstall when a direct dependency is absent, or when dependencies/overrides have
-  // moved since the last install. A null fingerprint means package.json is unreadable,
-  // in which case fall back to the presence check alone rather than reinstalling forever.
-  const stale = fingerprint !== null && readDepsStamp() !== fingerprint;
-  if (!missing && !stale) return true;
+  if (depsUpToDate(missing)) return true;
+
+  // Serialise installs. After an upgrade every concurrent hook sees the same stale
+  // stamp, and npm is not safe to run against one prefix from several processes.
+  let lockFd = null;
   try {
+    lockFd = openSync(DEPS_LOCK_PATH, "wx");
+  } catch (err) {
+    if (err.code === "EEXIST") {
+      // Another hook is installing. Scan with the tree we have rather than block the
+      // tool result; the next invocation picks up the refreshed one.
+      return !missing;
+    }
+    process.stderr.write(`[Defender] Dependency lock failed — scanner disabled: ${err.message}\n`);
+    return false;
+  }
+
+  try {
+    // Recheck under the lock: whoever held it first may have finished the install.
+    if (depsUpToDate(deps.find((d) => !existsSync(join(pluginRoot, "node_modules", d))))) return true;
     execSync(`npm install --prefix "${pluginRoot}" --silent --no-audit --no-fund`, {
       timeout: 120_000,
     });
-    if (fingerprint !== null) {
+    // Recompute after the install: npm normalises the lockfile, and the lockfile feeds
+    // the hash, so stamping the pre-install value would look stale on the next run.
+    const installed = depsFingerprint();
+    if (installed !== null) {
       try {
-        writeFileSync(DEPS_STAMP_PATH, fingerprint);
+        writeFileSync(DEPS_STAMP_PATH, installed);
       } catch {
         // A missing stamp only costs a redundant install next run.
       }
@@ -149,6 +175,13 @@ function ensureDepsInstalled() {
   } catch (err) {
     process.stderr.write(`[Defender] Dependency install failed — scanner disabled: ${err.message}\n`);
     return false;
+  } finally {
+    closeSync(lockFd);
+    try {
+      unlinkSync(DEPS_LOCK_PATH);
+    } catch {
+      // Already removed.
+    }
   }
 }
 
