@@ -25,6 +25,16 @@ const DAEMON_STATE = join(homedir(), ".claude", "defender-daemon.json");
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const pluginRoot = resolve(scriptDir, "..");
 const configPath = join(scriptDir, "defender-daemon.config.json");
+const DEPS_STAMP_PATH = join(pluginRoot, "node_modules", ".stackone-deps-stamp");
+
+function readDepsStamp() {
+  try {
+    return readFileSync(DEPS_STAMP_PATH, "utf8").trim();
+  } catch {
+    return null;
+  }
+}
+
 const requireFrom = createRequire(join(pluginRoot, "package.json"));
 
 function rotateLogIfNeeded() {
@@ -275,6 +285,9 @@ server.listen(SOCKET_PATH, () => {
     const state = {
       pid: process.pid,
       defenderVersion,
+      // Same stamp the client writes after an install. Recording it lets the client
+      // tell that this daemon predates a dependency change and needs replacing.
+      depsStamp: readDepsStamp(),
       protocolVersion: PROTOCOL_VERSION,
       startedAt: new Date().toISOString(),
       socket: SOCKET_PATH,

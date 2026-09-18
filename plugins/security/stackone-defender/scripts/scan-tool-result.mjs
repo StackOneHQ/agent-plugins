@@ -88,9 +88,17 @@ function readPluginDeps() {
 function depsFingerprint() {
   try {
     const pkg = JSON.parse(readFileSync(join(pluginRoot, "package.json"), "utf8"));
-    return createHash("sha256")
-      .update(JSON.stringify({ dependencies: pkg.dependencies ?? {}, overrides: pkg.overrides ?? {} }))
-      .digest("hex");
+    const hash = createHash("sha256").update(
+      JSON.stringify({ dependencies: pkg.dependencies ?? {}, overrides: pkg.overrides ?? {} }),
+    );
+    // npm resolves from the lockfile when one is present, so a lockfile-only change
+    // (a transitive bump that needed no override) also changes what lands on disk.
+    try {
+      hash.update(readFileSync(join(pluginRoot, "package-lock.json")));
+    } catch {
+      // No lockfile: package.json alone decides resolution.
+    }
+    return hash.digest("hex");
   } catch {
     return null;
   }
@@ -239,12 +247,18 @@ async function ensureDaemonRunning() {
   // alive AND matches the defender version currently in node_modules.
   // Either mismatch counts as "needs respawn" — same code path as cold.
   const expectedVersion = getExpectedDefenderVersion();
+  const expectedStamp = readDepsStamp();
   const running = getRunningDaemonInfo();
   if (running) {
     if (!processAlive(running.pid)) {
       await killAndClean(running.pid, "stale state file — pid not alive");
     } else if (expectedVersion && running.defenderVersion !== expectedVersion) {
       await killAndClean(running.pid, `defender version mismatch: running=${running.defenderVersion} expected=${expectedVersion}`);
+    } else if (expectedStamp && running.depsStamp !== expectedStamp) {
+      // The daemon loads the plugin's dependency tree into its own process, so new
+      // pins only take effect once it restarts. `defenderVersion` does not move when
+      // an override does, which would otherwise leave the old tree serving scans.
+      await killAndClean(running.pid, `dependency fingerprint mismatch: running=${running.depsStamp ?? "none"} expected=${expectedStamp}`);
     }
   } else if (existsSync(SOCKET_PATH)) {
     // Socket without state file — crash recovery. Clean it.
