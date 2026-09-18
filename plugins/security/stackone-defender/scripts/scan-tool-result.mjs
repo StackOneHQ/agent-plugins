@@ -23,7 +23,9 @@ import {
   writeFileSync,
 } from "fs";
 import { execSync, spawn } from "child_process";
-import { createHash } from "crypto";
+import { depsFingerprint as computeDepsFingerprint } from "./deps-fingerprint.mjs";
+
+const depsFingerprint = () => computeDepsFingerprint(pluginRoot);
 import net from "net";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -83,29 +85,6 @@ function readPluginDeps() {
   }
 }
 
-// Fingerprint of everything that decides which versions end up in node_modules.
-// `overrides` matters as much as `dependencies` here: security pins for transitive
-// packages live there, and a plugin upgrade that only moves a pin would otherwise
-// leave an existing install on the old, vulnerable version.
-function depsFingerprint() {
-  try {
-    const pkg = JSON.parse(readFileSync(join(pluginRoot, "package.json"), "utf8"));
-    const hash = createHash("sha256").update(
-      JSON.stringify({ dependencies: pkg.dependencies ?? {}, overrides: pkg.overrides ?? {} }),
-    );
-    // npm resolves from the lockfile when one is present, so a lockfile-only change
-    // (a transitive bump that needed no override) also changes what lands on disk.
-    try {
-      hash.update(readFileSync(join(pluginRoot, "package-lock.json")));
-    } catch {
-      // No lockfile: package.json alone decides resolution.
-    }
-    return hash.digest("hex");
-  } catch {
-    return null;
-  }
-}
-
 function readDepsStamp() {
   try {
     return readFileSync(DEPS_STAMP_PATH, "utf8").trim();
@@ -123,24 +102,30 @@ const DEPS_LOCK_STALE_MS = 180_000;
 // a daemon mid-install would let the replacement import a half-written node_modules.
 let depsInstallInFlight = false;
 
+// Contention and failure are different answers. Contention means another hook is
+// installing, so the tree will be current shortly and this hook should leave the daemon
+// alone. A genuine error means the refresh cannot happen at all, and pretending an
+// install is in flight would keep a stale daemon serving the old tree indefinitely.
 function acquireDepsLock() {
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
-      return openSync(DEPS_LOCK_PATH, "wx");
+      return { fd: openSync(DEPS_LOCK_PATH, "wx"), contended: false };
     } catch (err) {
       if (err.code !== "EEXIST") {
         process.stderr.write(`[Defender] Dependency lock failed — scanner disabled: ${err.message}\n`);
-        return null;
+        return { fd: null, contended: false };
       }
       try {
-        if (Date.now() - statSync(DEPS_LOCK_PATH).mtimeMs <= DEPS_LOCK_STALE_MS) return null;
+        if (Date.now() - statSync(DEPS_LOCK_PATH).mtimeMs <= DEPS_LOCK_STALE_MS) {
+          return { fd: null, contended: true };
+        }
         unlinkSync(DEPS_LOCK_PATH);
       } catch {
         // The owner released it between our open and our stat. Try once more.
       }
     }
   }
-  return null;
+  return { fd: null, contended: true };
 }
 
 function depsUpToDate(missing) {
@@ -158,13 +143,20 @@ function ensureDepsInstalled() {
 
   // Serialise installs. After an upgrade every concurrent hook sees the same stale
   // stamp, and npm is not safe to run against one prefix from several processes.
-  const lockFd = acquireDepsLock();
-  if (lockFd === null) {
+  const lock = acquireDepsLock();
+  if (lock.fd === null) {
+    if (!lock.contended) {
+      // The lock could not be taken at all, so the refresh will not happen. Do not mark
+      // an install in flight: that would suppress daemon replacement and quietly keep the
+      // old tree scanning. Skip this event instead and let the next hook retry.
+      return false;
+    }
     // Another hook owns the install. The tree on disk is in flux, so this process must
     // not touch the daemon either; scan with what is already running, if anything.
     depsInstallInFlight = true;
     return !missing;
   }
+  const lockFd = lock.fd;
 
   try {
     // Recheck under the lock: whoever held it first may have finished the install.

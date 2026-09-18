@@ -12,7 +12,7 @@ import { dirname, join, resolve } from "path";
 import { homedir } from "os";
 import { fileURLToPath } from "url";
 import { createServer } from "net";
-import { createHash } from "crypto";
+import { depsFingerprint as computeDepsFingerprint } from "./deps-fingerprint.mjs";
 import { unlinkSync, existsSync, readFileSync, appendFileSync, writeFileSync, mkdirSync, statSync, renameSync } from "fs";
 
 const PROTOCOL_VERSION = 1;
@@ -26,26 +26,6 @@ const DAEMON_STATE = join(homedir(), ".claude", "defender-daemon.json");
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const pluginRoot = resolve(scriptDir, "..");
 const configPath = join(scriptDir, "defender-daemon.config.json");
-// Must stay in step with the same function in scan-tool-result.mjs.
-function depsFingerprint() {
-  try {
-    const pkg = JSON.parse(readFileSync(join(pluginRoot, "package.json"), "utf8"));
-    const hash = createHash("sha256").update(
-      JSON.stringify({ dependencies: pkg.dependencies ?? {}, overrides: pkg.overrides ?? {} }),
-    );
-    // npm resolves from the lockfile when one is present, so a lockfile-only change
-    // (a transitive bump that needed no override) also changes what lands on disk.
-    try {
-      hash.update(readFileSync(join(pluginRoot, "package-lock.json")));
-    } catch {
-      // No lockfile: package.json alone decides resolution.
-    }
-    return hash.digest("hex");
-  } catch {
-    return null;
-  }
-}
-
 const requireFrom = createRequire(join(pluginRoot, "package.json"));
 
 function rotateLogIfNeeded() {
@@ -296,9 +276,9 @@ server.listen(SOCKET_PATH, () => {
     const state = {
       pid: process.pid,
       defenderVersion,
-      // Same stamp the client writes after an install. Recording it lets the client
-      // tell that this daemon predates a dependency change and needs replacing.
-      depsStamp: depsFingerprint(),
+      // Computed here, not read from the client's stamp file, so the client can tell
+      // that this daemon predates a dependency change and needs replacing.
+      depsStamp: computeDepsFingerprint(pluginRoot),
       protocolVersion: PROTOCOL_VERSION,
       startedAt: new Date().toISOString(),
       socket: SOCKET_PATH,
