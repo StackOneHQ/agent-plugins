@@ -12,6 +12,7 @@ import { dirname, join, resolve } from "path";
 import { homedir } from "os";
 import { fileURLToPath } from "url";
 import { createServer } from "net";
+import { depsFingerprint as computeDepsFingerprint } from "./deps-fingerprint.mjs";
 import { unlinkSync, existsSync, readFileSync, appendFileSync, writeFileSync, mkdirSync, statSync, renameSync } from "fs";
 
 const PROTOCOL_VERSION = 1;
@@ -275,6 +276,9 @@ server.listen(SOCKET_PATH, () => {
     const state = {
       pid: process.pid,
       defenderVersion,
+      // Computed here, not read from the client's stamp file, so the client can tell
+      // that this daemon predates a dependency change and needs replacing.
+      depsStamp: computeDepsFingerprint(pluginRoot),
       protocolVersion: PROTOCOL_VERSION,
       startedAt: new Date().toISOString(),
       socket: SOCKET_PATH,
