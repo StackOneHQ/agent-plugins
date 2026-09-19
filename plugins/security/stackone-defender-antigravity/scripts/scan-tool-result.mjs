@@ -41,7 +41,7 @@ import {
   statSync,
   writeFileSync,
 } from "fs";
-import { execSync, spawn } from "child_process";
+import { execFileSync, spawn } from "child_process";
 import { depsFingerprint as computeDepsFingerprint } from "./deps-fingerprint.mjs";
 
 const depsFingerprint = () => computeDepsFingerprint(pluginRoot);
@@ -174,7 +174,9 @@ function ensureDepsInstalled() {
   try {
     // Recheck under the lock: whoever held it first may have finished the install.
     if (depsUpToDate(deps.find((d) => !existsSync(join(pluginRoot, "node_modules", d))))) return true;
-    execSync(`npm install --prefix "${pluginRoot}" --silent --no-audit --no-fund`, {
+    // execFileSync, not a shell string: the prefix is an installation path we do not
+    // construct, and a quote in it would otherwise escape into an arbitrary command.
+    execFileSync("npm", ["install", "--prefix", pluginRoot, "--silent", "--no-audit", "--no-fund"], {
       timeout: 120_000,
     });
     // Recompute after the install: npm normalises the lockfile, and the lockfile feeds
