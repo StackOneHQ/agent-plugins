@@ -20,13 +20,20 @@ import {
   closeSync,
   unlinkSync,
   statSync,
+  writeFileSync,
 } from "fs";
-import { execSync, spawn } from "child_process";
+import { execFileSync, spawn } from "child_process";
+import { depsFingerprint as computeDepsFingerprint } from "./deps-fingerprint.mjs";
+
+const depsFingerprint = () => computeDepsFingerprint(pluginRoot);
 import net from "net";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const pluginRoot = join(scriptDir, "..");
 const DAEMON_SCRIPT = join(scriptDir, "defender-daemon.mjs");
+const DEPS_STAMP_PATH = join(pluginRoot, "node_modules", ".stackone-deps-stamp");
+// Per-plugin, so the two Defender variants never serialise against each other.
+const DEPS_LOCK_PATH = join(pluginRoot, ".stackone-deps-install.lock");
 const SOCKET_PATH = join(homedir(), ".claude", "defender.sock");
 const LOCK_PATH = join(homedir(), ".claude", "defender-daemon.lock");
 const STATE_PATH = join(homedir(), ".claude", "defender-daemon.json");
@@ -78,18 +85,108 @@ function readPluginDeps() {
   }
 }
 
+function readDepsStamp() {
+  try {
+    return readFileSync(DEPS_STAMP_PATH, "utf8").trim();
+  } catch {
+    return null;
+  }
+}
+
+// npm itself is capped at 120s, so a lock older than this belongs to a hook that died
+// before its finally block ran. Reclaiming it matters: a lock left behind forever would
+// stop dependency refreshes, which is exactly how a vulnerable tree would persist.
+const DEPS_LOCK_STALE_MS = 180_000;
+
+// Set when another hook owns the install. Daemon lifecycle is then off limits: replacing
+// a daemon mid-install would let the replacement import a half-written node_modules.
+let depsInstallInFlight = false;
+
+// Contention and failure are different answers. Contention means another hook is
+// installing, so the tree will be current shortly and this hook should leave the daemon
+// alone. A genuine error means the refresh cannot happen at all, and pretending an
+// install is in flight would keep a stale daemon serving the old tree indefinitely.
+function acquireDepsLock() {
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      return { fd: openSync(DEPS_LOCK_PATH, "wx"), contended: false };
+    } catch (err) {
+      if (err.code !== "EEXIST") {
+        process.stderr.write(`[Defender] Dependency lock failed — scanner disabled: ${err.message}\n`);
+        return { fd: null, contended: false };
+      }
+      try {
+        if (Date.now() - statSync(DEPS_LOCK_PATH).mtimeMs <= DEPS_LOCK_STALE_MS) {
+          return { fd: null, contended: true };
+        }
+        unlinkSync(DEPS_LOCK_PATH);
+      } catch {
+        // The owner released it between our open and our stat. Try once more.
+      }
+    }
+  }
+  return { fd: null, contended: true };
+}
+
+function depsUpToDate(missing) {
+  if (missing) return false;
+  const fingerprint = depsFingerprint();
+  // A null fingerprint means package.json is unreadable. Fall back to the presence
+  // check alone rather than reinstalling on every invocation.
+  return fingerprint === null || readDepsStamp() === fingerprint;
+}
+
 function ensureDepsInstalled() {
   const deps = readPluginDeps();
   const missing = deps.find((d) => !existsSync(join(pluginRoot, "node_modules", d)));
-  if (!missing) return true;
+  if (depsUpToDate(missing)) return true;
+
+  // Serialise installs. After an upgrade every concurrent hook sees the same stale
+  // stamp, and npm is not safe to run against one prefix from several processes.
+  const lock = acquireDepsLock();
+  if (lock.fd === null) {
+    if (!lock.contended) {
+      // The lock could not be taken at all, so the refresh will not happen. Do not mark
+      // an install in flight: that would suppress daemon replacement and quietly keep the
+      // old tree scanning. Skip this event instead and let the next hook retry.
+      return false;
+    }
+    // Another hook owns the install. The tree on disk is in flux, so this process must
+    // not touch the daemon either; scan with what is already running, if anything.
+    depsInstallInFlight = true;
+    return !missing;
+  }
+  const lockFd = lock.fd;
+
   try {
-    execSync(`npm install --prefix "${pluginRoot}" --silent --no-audit --no-fund`, {
+    // Recheck under the lock: whoever held it first may have finished the install.
+    if (depsUpToDate(deps.find((d) => !existsSync(join(pluginRoot, "node_modules", d))))) return true;
+    // execFileSync, not a shell string: the prefix is an installation path we do not
+    // construct, and a quote in it would otherwise escape into an arbitrary command.
+    execFileSync("npm", ["install", "--prefix", pluginRoot, "--silent", "--no-audit", "--no-fund"], {
       timeout: 120_000,
     });
+    // Recompute after the install: npm normalises the lockfile, and the lockfile feeds
+    // the hash, so stamping the pre-install value would look stale on the next run.
+    const installed = depsFingerprint();
+    if (installed !== null) {
+      try {
+        writeFileSync(DEPS_STAMP_PATH, installed);
+      } catch {
+        // A missing stamp only costs a redundant install next run.
+      }
+    }
     return true;
   } catch (err) {
     process.stderr.write(`[Defender] Dependency install failed — scanner disabled: ${err.message}\n`);
     return false;
+  } finally {
+    closeSync(lockFd);
+    try {
+      unlinkSync(DEPS_LOCK_PATH);
+    } catch {
+      // Already removed.
+    }
   }
 }
 
@@ -201,12 +298,20 @@ async function ensureDaemonRunning() {
   // alive AND matches the defender version currently in node_modules.
   // Either mismatch counts as "needs respawn" — same code path as cold.
   const expectedVersion = getExpectedDefenderVersion();
+  // Computed, not read back from the stamp file: a failed stamp write must not
+  // quietly disable daemon validation and leave the old tree serving scans.
+  const expectedStamp = depsFingerprint();
   const running = getRunningDaemonInfo();
   if (running) {
     if (!processAlive(running.pid)) {
       await killAndClean(running.pid, "stale state file — pid not alive");
     } else if (expectedVersion && running.defenderVersion !== expectedVersion) {
       await killAndClean(running.pid, `defender version mismatch: running=${running.defenderVersion} expected=${expectedVersion}`);
+    } else if (expectedStamp && running.depsStamp !== expectedStamp && !depsInstallInFlight) {
+      // The daemon loads the plugin's dependency tree into its own process, so new
+      // pins only take effect once it restarts. `defenderVersion` does not move when
+      // an override does, which would otherwise leave the old tree serving scans.
+      await killAndClean(running.pid, `dependency fingerprint mismatch: running=${running.depsStamp ?? "none"} expected=${expectedStamp}`);
     }
   } else if (existsSync(SOCKET_PATH)) {
     // Socket without state file — crash recovery. Clean it.
@@ -218,6 +323,10 @@ async function ensureDaemonRunning() {
   }
 
   if (existsSync(SOCKET_PATH)) return true;
+
+  // No daemon, and another hook is mid-install. Spawning now would import a
+  // half-written node_modules, so skip this event; the next hook starts cleanly.
+  if (depsInstallInFlight) return false;
 
   let lockFd = null;
   try {
