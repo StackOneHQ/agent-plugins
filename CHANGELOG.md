@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.1](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.2.0...stackone-agent-plugins-v3.2.1) (2026-09-23)
+
+
+### Bug Fixes
+
+* **defender:** give each Defender plugin its own daemon ([#39](https://github.com/StackOneHQ/agent-plugins/issues/39)) ([3bd77cc](https://github.com/StackOneHQ/agent-plugins/commit/3bd77cc5bebd28672d41b44f273954002328d5c9))
+* **deps:** clear all Dependabot alerts in the Defender plugins ([#36](https://github.com/StackOneHQ/agent-plugins/issues/36)) ([0f8f286](https://github.com/StackOneHQ/agent-plugins/commit/0f8f286eed58ed63831084272447c5f978bd87c5))
+
 ## [3.2.0](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.1.1...stackone-agent-plugins-v3.2.0) (2026-08-31)
 
 
