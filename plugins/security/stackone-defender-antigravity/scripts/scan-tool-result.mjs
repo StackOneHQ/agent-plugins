@@ -28,7 +28,6 @@
  */
 
 import { dirname, join } from "path";
-import { homedir } from "os";
 import { fileURLToPath } from "url";
 import {
   existsSync,
@@ -43,6 +42,7 @@ import {
 } from "fs";
 import { execFileSync, spawn } from "child_process";
 import { depsFingerprint as computeDepsFingerprint } from "./deps-fingerprint.mjs";
+import { SOCKET_PATH, LOCK_PATH, STATE_PATH, CLIENT_LOG as CLIENT_STDERR_LOG } from "./daemon-paths.mjs";
 
 const depsFingerprint = () => computeDepsFingerprint(pluginRoot);
 import net from "net";
@@ -53,10 +53,6 @@ const DAEMON_SCRIPT = join(scriptDir, "defender-daemon.mjs");
 const DEPS_STAMP_PATH = join(pluginRoot, "node_modules", ".stackone-deps-stamp");
 // Per-plugin, so the two Defender variants never serialise against each other.
 const DEPS_LOCK_PATH = join(pluginRoot, ".stackone-deps-install.lock");
-const SOCKET_PATH = join(homedir(), ".claude", "defender.sock");
-const LOCK_PATH = join(homedir(), ".claude", "defender-daemon.lock");
-const STATE_PATH = join(homedir(), ".claude", "defender-daemon.json");
-const CLIENT_STDERR_LOG = join(homedir(), ".claude", "defender-client.log");
 try {
   mkdirSync(dirname(CLIENT_STDERR_LOG), { recursive: true });
 } catch {
