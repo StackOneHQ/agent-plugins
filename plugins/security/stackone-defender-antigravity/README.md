@@ -26,11 +26,11 @@ agy plugin install ./plugins/security/stackone-defender-antigravity
 
 (A marketplace install path will land once the StackOne marketplace registry supports Antigravity. For now, install from the repo.)
 
-**2. Trigger the first run.** Use any tool that returns more than ~500 bytes (e.g. read a file, or fetch any URL). The hook self-installs its ML dependencies (`@stackone/defender`, `onnxruntime-node`, `@huggingface/transformers`, `fasttext.wasm`) into the plugin's own `node_modules` on this first call. Expect a one-time 5–10 second pause; subsequent calls reuse a persistent daemon over `~/.claude/defender.sock` and complete in low milliseconds.
+**2. Trigger the first run.** Use any tool that returns more than ~500 bytes (e.g. read a file, or fetch any URL). The hook self-installs its ML dependencies (`@stackone/defender`, `onnxruntime-node`, `@huggingface/transformers`, `fasttext.wasm`) into the plugin's own `node_modules` on this first call. Expect a one-time 5–10 second pause; subsequent calls reuse a persistent daemon over `~/.claude/defender-antigravity.sock` and complete in low milliseconds.
 
 That's it. There's no API key, no config file to edit, and no account to create. Defender is active from the next tool call onward.
 
-> **Sharing the daemon with the Claude Code plugin.** This plugin reuses the same `~/.claude/defender.sock` socket as the [Claude Code variant](../stackone-defender/). If both plugins are installed, the daemon spawned by whichever fires first will serve both — one ONNX session in memory, both agents protected. Versions must match.
+> **Running alongside the Claude Code plugin.** This plugin runs its own daemon, separate from the [Claude Code variant](../stackone-defender/)'s. The two pin different Defender versions, so a shared daemon made each one replace the other's on every scan. With both installed you get two daemons and two copies of the model in memory, and each one stays warm.
 
 ## What gets scanned
 
@@ -102,7 +102,7 @@ Default thresholds and the model path live in `scripts/defender-daemon.config.js
 
 `enableTier1` is off by default. Tier 1 (regex patterns) is brittle and high-FP on prose discussing attacks. Tier 2 (the multihead ONNX classifier with Static Frequency Estimation preprocessing) is the sole decision-maker.
 
-The daemon reads this config only on startup, and it is a detached long-lived process that outlives your shell. To pick up config changes, stop the running daemon (look up the PID in `~/.claude/defender-daemon.json` and `kill` it, or delete `~/.claude/defender.sock` plus `~/.claude/defender-daemon.json`) and the next tool call will spawn a fresh daemon with the new config.
+The daemon reads this config only on startup, and it is a detached long-lived process that outlives your shell. To pick up config changes, stop the running daemon (look up the PID in `~/.claude/defender-antigravity-daemon.json` and `kill` it, or delete `~/.claude/defender-antigravity.sock` plus `~/.claude/defender-antigravity-daemon.json`) and the next tool call will spawn a fresh daemon with the new config.
 
 ## Privacy
 
@@ -115,11 +115,11 @@ The daemon reads this config only on startup, and it is a detached long-lived pr
 
 | Path | Purpose |
 |---|---|
-| `~/.claude/defender.sock` | Unix socket the hook talks to (shared with Claude Code plugin) |
-| `~/.claude/defender-daemon.json` | Running daemon's PID + version state |
-| `~/.claude/defender-daemon.log` | Daemon stderr (rotated) |
-| `~/.claude/defender-client.log` | Hook-side errors (transient) |
-| `~/.claude/defender-daemon.lock` | Spawn-time lockfile (transient) |
+| `~/.claude/defender-antigravity.sock` | Unix socket the hook talks to |
+| `~/.claude/defender-antigravity-daemon.json` | Running daemon's PID + version state |
+| `~/.claude/defender-antigravity-daemon.log` | Daemon stderr (rotated) |
+| `~/.claude/defender-antigravity-client.log` | Hook-side errors (transient) |
+| `~/.claude/defender-antigravity-daemon.lock` | Spawn-time lockfile (transient) |
 
 All five are local-only. None get written to until Defender actually fires.
 
@@ -127,13 +127,13 @@ All five are local-only. None get written to until Defender actually fires.
 
 ## Troubleshooting
 
-**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd ~/.gemini/config/plugins/stackone-defender-antigravity && npm install` manually. (`$CLAUDE_PLUGIN_ROOT` is set by the host CLI at hook-runtime and is not available in your interactive shell.)
+**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-antigravity-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd ~/.gemini/config/plugins/stackone-defender-antigravity && npm install` manually. (`$CLAUDE_PLUGIN_ROOT` is set by the host CLI at hook-runtime and is not available in your interactive shell.)
 
 **Hook receives an unexpected stdin shape.** Antigravity's `PostToolHookArgs` evolved across CLI versions. The hook accepts both proto3-camelCase (`toolName`, `toolResult`, `toolOutput`) and the snake_case fallbacks (`tool_name`, `tool_output`, `tool_response`). If Defender silently does nothing on every call, capture the stdin via a wrapper script and open an issue with the field names you see.
 
 **"Slow first scan."** Cold start spawns the daemon and warms up the ONNX session. Steady-state latency is a few milliseconds; first call after a fresh login can take 5–10 seconds.
 
-**Daemon won't start.** Delete `~/.claude/defender.sock`, `~/.claude/defender-daemon.json`, and `~/.claude/defender-daemon.lock`, then retry. The hook recovers from stale state automatically but a manual clean is occasionally faster.
+**Daemon won't start.** Delete `~/.claude/defender-antigravity.sock`, `~/.claude/defender-antigravity-daemon.json`, and `~/.claude/defender-antigravity-daemon.lock`, then retry. The hook recovers from stale state automatically but a manual clean is occasionally faster.
 
 **Architecture without `onnxruntime-node` binaries.** Rare on macOS / Linux x86_64 / arm64, but if you hit it, the daemon falls back to a smaller MLP head. Detection quality is lower; raise an issue with your platform string.
 
@@ -161,7 +161,7 @@ This plugin follows the marketplace's lockstep version. Behavior-affecting chang
 | Stdin envelope | `{tool_name, tool_output, tool_response}` | `{toolName, toolResult, toolOutput}` (proto3-JSON) |
 | Stdout envelope | `{hookSpecificOutput: {hookEventName, additionalContext}}` | `{inject_steps: [{system_message: {text}}]}` |
 | Tool matcher | narrow allow-list (`Bash\|Read\|WebFetch\|…`) | `.*` (Antigravity's tool surface is less stable) |
-| Daemon | shared at `~/.claude/defender.sock` | shared at `~/.claude/defender.sock` |
+| Daemon | `~/.claude/defender.sock` | `~/.claude/defender-antigravity.sock` |
 | Skill behavior | silent-review-then-decide | silent-review-then-decide (same SKILL.md) |
 
 ## License

@@ -9,19 +9,16 @@
 
 import { createRequire } from "module";
 import { dirname, join, resolve } from "path";
-import { homedir } from "os";
 import { fileURLToPath } from "url";
 import { createServer } from "net";
 import { depsFingerprint as computeDepsFingerprint } from "./deps-fingerprint.mjs";
+import { SOCKET_PATH, DAEMON_LOG, STATE_PATH as DAEMON_STATE } from "./daemon-paths.mjs";
 import { unlinkSync, existsSync, readFileSync, appendFileSync, writeFileSync, mkdirSync, statSync, renameSync } from "fs";
 
 const PROTOCOL_VERSION = 1;
 const IDLE_TIMEOUT_MS = 10 * 60 * 1000; // 10 min
 const UPTIME_CAP_MS = 12 * 60 * 60 * 1000; // 12 hours — graceful self-restart bound
 const LOG_SIZE_CAP_BYTES = 5 * 1024 * 1024; // 5 MB before rotation
-const SOCKET_PATH = join(homedir(), ".claude", "defender.sock");
-const DAEMON_LOG = join(homedir(), ".claude", "defender-daemon.log");
-const DAEMON_STATE = join(homedir(), ".claude", "defender-daemon.json");
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const pluginRoot = resolve(scriptDir, "..");
