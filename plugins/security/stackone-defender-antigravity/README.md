@@ -51,7 +51,7 @@ flowchart LR
     D -->|benign| P[silent pass]
 ```
 
-- The **daemon** keeps the ONNX model and tokenizer in memory across calls. One process per user; auto-respawns on version mismatch. Shared with the Claude Code plugin if both are installed.
+- The **daemon** keeps the ONNX model and tokenizer in memory across calls. One process per user; auto-respawns on version mismatch. Separate from the Claude Code plugin's daemon, so the two never replace each other.
 - The **hook** is a thin stdin/stdout client. It reads Antigravity's `PostToolHookArgs` (proto3-JSON) from stdin, ships the tool output to the daemon over a Unix domain socket, waits up to 5 seconds for a verdict, and falls back to silent-pass if anything goes wrong (timeout, daemon down, install failed). Time-bounded and fails open: a hung daemon will delay the next turn by at most the scan timeout (and up to ~6 seconds on cold start while the daemon spawns), then the agent proceeds as if Defender weren't installed.
 - The **skill** (`skills/stackone-defender/SKILL.md`) is loaded into the agent's context and governs how the model reacts to flags. Default behavior: silent review on suspected false positives, refuse-and-tell-user on confirmed attacks, no flag-related noise otherwise.
 
@@ -123,7 +123,7 @@ The daemon reads this config only on startup, and it is a detached long-lived pr
 
 All five are local-only. None get written to until Defender actually fires.
 
-> **Why `~/.claude/`?** The daemon is shared with the Claude Code plugin; the path is historical. If you only install the Antigravity plugin, the daemon still lives under `~/.claude/`. This may change in a future version.
+> **Why `~/.claude/`?** The path is historical: this plugin's daemon files sit next to the Claude Code plugin's, under their own `defender-antigravity` names. This may change in a future version.
 
 ## Troubleshooting
 
