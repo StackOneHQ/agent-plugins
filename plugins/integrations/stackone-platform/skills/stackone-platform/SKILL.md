@@ -20,7 +20,9 @@ Do not guess or rely on potentially outdated information in this skill. Always v
 
 When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`, append `.md` to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
 
-**If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time), search `llms.txt` for the page's topic (e.g. "Authentication", "Rate Limiting", "List Accounts", "Webhooks") and use the URL listed there. If the docs don't cover the question, say so and suggest contacting StackOne support.
+**If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time):
+- Fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search it for the page's topic (e.g. "Authentication", "Rate Limiting", "List Accounts", "Webhooks") and use the URL listed there.
+- If the docs don't cover the question, say so and suggest contacting StackOne support. Don't invent an answer.
 
 ## Instructions
 
