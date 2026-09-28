@@ -4,6 +4,7 @@ description: Behavioral guidance for Claude Code when StackOne Defender is runni
 license: MIT
 metadata:
   author: stackone
+  version: "6.1"
 ---
 
 # StackOne Defender
