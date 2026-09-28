@@ -18,7 +18,7 @@ Before writing code, fetch the latest documentation:
 
 The Hub component changes between versions. Take props, peer dependencies and link expiry from the docs, not from this skill.
 
-When fetching any `docs.stackone.com` page, append `.md` to the URL to get it as markdown.
+When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`, append `.md` to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
 
 **If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time):
 - Fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search the "Embed" section for the page's topic (e.g. "Connect Session", "Account Linking", "Auth Link", "Handle Account Events") and use the URL listed there.
