@@ -56,8 +56,8 @@ Each overview page below links to its individual guides, so fetch the overview a
 
 - TypeScript SDK README: `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-node/refs/heads/main/README.md`
 - Python SDK README: `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-python/refs/heads/main/README.md`
-- MCP overview: `https://docs.stackone.com/embed/call-actions/mcp`
-- MCP troubleshooting: `https://docs.stackone.com/embed/call-actions/mcp/troubleshooting`
-- AI platforms (MCP clients): `https://docs.stackone.com/connect/ai-platforms/overview`
-- A2A overview: `https://docs.stackone.com/embed/call-actions/agent2agent`
+- MCP overview: `https://docs.stackone.com/embed/call-actions/mcp.md`
+- MCP troubleshooting: `https://docs.stackone.com/embed/call-actions/mcp/troubleshooting.md`
+- AI platforms (MCP clients): `https://docs.stackone.com/connect/ai-platforms/overview.md`
+- A2A overview: `https://docs.stackone.com/embed/call-actions/agent2agent.md`
 - All docs: `https://docs.stackone.com/llms.txt`

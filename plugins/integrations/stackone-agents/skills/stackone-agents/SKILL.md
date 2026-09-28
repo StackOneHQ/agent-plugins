@@ -15,15 +15,16 @@ metadata:
 SDK APIs change frequently. Before writing code:
 1. For TypeScript: fetch `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-node/refs/heads/main/README.md`
 2. For Python: fetch `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-python/refs/heads/main/README.md`
-3. For MCP setup: fetch `https://docs.stackone.com/embed/call-actions/mcp`
+3. For MCP setup: fetch `https://docs.stackone.com/embed/call-actions/mcp.md`
 
 These sources contain the latest code examples and API surface. Do not rely solely on this skill for code snippets.
 
-When fetching any `docs.stackone.com` page, append `.md` to the URL to get it as markdown.
+When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`, append `.md` to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
 
 **If any URL in this skill returns 404, or a page doesn't cover what you need** (e.g. an overview page doesn't link the user's framework or app; StackOne reorganizes its docs from time to time):
 - For a `docs.stackone.com` page, fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search it for the page's topic (e.g. "MCP", "AI Platforms", "Agent2Agent", "Claude Code") and use the URL listed there.
 - For an SDK README, open the repository instead (`https://github.com/stackoneHQ/stackone-ai-node` or `https://github.com/stackoneHQ/stackone-ai-python`) and find the current README.
+- If the docs don't cover the question, say so and suggest contacting StackOne support. Don't invent an answer.
 
 ## Instructions
 
@@ -113,7 +114,7 @@ StackOne's MCP server for agent code is at `https://api.stackone.com/mcp`. Every
 
 Fetch the overview first: `https://docs.stackone.com/embed/call-actions/mcp.md`. It links to a setup guide for each supported agent framework (Anthropic SDK, OpenAI Agents SDK, LangChain, Google ADK, etc.). Follow the link that matches the user's framework.
 
-**Testing the MCP connection**: launch MCP Inspector, then add the `Authorization` and `x-account-id` headers in the Inspector UI before connecting (see `https://docs.stackone.com/embed/call-actions/mcp/troubleshooting`):
+**Testing the MCP connection**: launch MCP Inspector, then add the `Authorization` and `x-account-id` headers in the Inspector UI before connecting (see `https://docs.stackone.com/embed/call-actions/mcp/troubleshooting.md`):
 ```bash
 npx @modelcontextprotocol/inspector https://api.stackone.com/mcp
 ```
