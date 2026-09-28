@@ -1,11 +1,11 @@
 ---
 name: stackone-unified-connectors
-description: Baseline skill for building unified/schema-based connectors that transform provider data into standardized schemas. Use alongside domain-specific schema skills (e.g., unified-hris-schema, unified-crm-schema) that define your organization's standard schemas. Use when user says "start unified build for [provider]", "build a schema-based connector", "map fields to schema", "test unified connector", or asks about field mapping, enum mapping, pagination configuration, or scope decisions. This skill provides implementation patterns; schema skills provide field definitions. Do NOT use for agentic/custom connectors (use stackone-cli), discovering existing connectors (use stackone-connectors), or building AI agents (use stackone-agents).
+description: Baseline skill for building unified/schema-based connectors that transform provider data into standardized schemas. Use alongside domain-specific schema skills that you create to define your organization's standard schemas. Use when user says "start unified build for [provider]", "build a schema-based connector", "map fields to schema", "test unified connector", or asks about field mapping, enum mapping, pagination configuration, or scope decisions. This skill provides implementation patterns; schema skills provide field definitions. Do NOT use for agentic/custom connectors (use stackone-cli), discovering existing connectors (use stackone-connectors), or building AI agents (use stackone-agents).
 license: MIT
 compatibility: Requires StackOne CLI (@stackone/cli). Requires access to provider API documentation.
 metadata:
   author: stackone
-  version: "2.1"
+  version: "2.2"
 ---
 
 # StackOne Unified Connectors
@@ -27,9 +27,13 @@ This separation allows you to maintain consistent schemas across all providers w
 ## Important
 
 Before building unified connectors:
-1. Read the CLI documentation: https://docs.stackone.com/guides/connector-engine/cli-reference
+1. Read the CLI documentation: https://docs.stackone.com/connector-building/stackone-cli.md
 2. Use `stackone help <command>` for command-specific details
 3. Always verify response structures with `--debug` before configuring mappings
+
+When fetching any `docs.stackone.com` page, append `.md` to the URL to get it as markdown.
+
+**If any URL in this skill returns 404** (StackOne reorganizes its docs from time to time), fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search it for the page's topic (e.g. "StackOne CLI", "Defined Output Schemas", "Connector YAML Reference") and use the URL listed there.
 
 ## Core Principles
 
@@ -406,8 +410,10 @@ Result: Working pagination with correct cursor handling.
 | Resource | URL |
 |----------|-----|
 | CLI Package | https://www.npmjs.com/package/@stackone/cli |
-| Connector Engine Docs | https://docs.stackone.com/guides/connector-engine |
-| CLI Reference | https://docs.stackone.com/guides/connector-engine/cli-reference |
+| Connector Building Docs | https://docs.stackone.com/connector-building/overview.md |
+| CLI Reference | https://docs.stackone.com/connector-building/stackone-cli.md |
+| Defined Output Schemas | https://docs.stackone.com/connector-building/defined-output-schemas.md |
+| Connector YAML Reference | https://docs.stackone.com/connector-yaml-reference/overview.md |
 
 ## Creating Domain-Specific Schema Skills
 
