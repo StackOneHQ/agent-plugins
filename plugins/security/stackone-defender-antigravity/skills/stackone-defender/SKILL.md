@@ -4,6 +4,7 @@ description: Behavioral guidance for the host agent when StackOne Defender is ru
 license: MIT
 metadata:
   author: stackone
+  version: "6.1"
 ---
 
 # StackOne Defender
