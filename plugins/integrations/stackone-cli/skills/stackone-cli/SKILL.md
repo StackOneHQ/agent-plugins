@@ -18,7 +18,7 @@ The CLI is actively developed and commands change between versions. Before provi
 
 Do not guess CLI commands or flags — always verify against live docs.
 
-When fetching any `docs.stackone.com` page, append `.md` to the URL to get it as markdown.
+When fetching any `docs.stackone.com` page, append `.md` to the URL to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
 
 **If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time):
 - Fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search it for the page's topic (e.g. "Connector Building", "StackOne CLI", "Connector YAML Reference", "Expression Language") and use the URL listed there.
@@ -29,7 +29,7 @@ When fetching any `docs.stackone.com` page, append `.md` to the URL to get it as
 ### Step 1: Understand when to build a custom connector
 
 Custom connectors are for providers StackOne doesn't support yet, internal systems, or actions a standard connector lacks. Before building one:
-- Check if the provider already exists: use the `stackone-connectors` skill or browse `https://docs.stackone.com/connectors/introduction`
+- Check if the provider already exists: use the `stackone-connectors` skill or browse `https://docs.stackone.com/connectors/introduction.md`
 - If the provider exists but is missing specific actions, customize the existing connector instead of starting from scratch. Fetch `https://docs.stackone.com/connector-building/customizing-connectors.md` (pull, edit, test, push)
 - Custom connectors need Enterprise access. Fetch `https://docs.stackone.com/connector-building/overview.md` for the options, including asking StackOne to build it
 
@@ -64,7 +64,7 @@ For releasing changes without breaking linked accounts, fetch `https://docs.stac
 User says: "We have an internal HR system. Can I connect it to StackOne?"
 
 Actions:
-1. Fetch the First Connector guide
+1. Fetch `https://docs.stackone.com/connector-building/first-connector.md`
 2. Walk through its steps in order, from setup to pushing the connector, quoting its commands exactly
 
 Result: Custom connector built, tested and pushed to their project.
