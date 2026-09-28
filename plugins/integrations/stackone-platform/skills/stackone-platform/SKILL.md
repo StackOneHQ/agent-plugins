@@ -18,7 +18,7 @@ Before answering platform questions, fetch the latest documentation:
 
 Do not guess or rely on potentially outdated information in this skill. Always verify against live docs.
 
-When fetching any `docs.stackone.com` page, append `.md` to the URL to get it as markdown.
+When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`, append `.md` to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
 
 **If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time), search `llms.txt` for the page's topic (e.g. "Authentication", "Rate Limiting", "List Accounts", "Webhooks") and use the URL listed there. If the docs don't cover the question, say so and suggest contacting StackOne support.
 
@@ -43,11 +43,10 @@ curl https://api.stackone.com/v2/accounts \
   -H "Authorization: Basic $(echo -n 'YOUR_API_KEY:' | base64)"
 ```
 
-Key details:
-- API keys are created at https://app.stackone.com
-- Key format: `v1.{region}.xxxxx`
-- The `x-account-id` header is required for data API calls — it identifies which linked account to query
-- A **linked account** = a connection between your customer and a third-party provider (e.g., BambooHR)
+For the details, fetch:
+- Creating or managing an API key: `https://docs.stackone.com/embed/api-keys.md`
+- Header format, key format and when the `x-account-id` header is needed: `https://docs.stackone.com/platform-api/authentication.md`
+- What a linked account, connector, connector profile or project is: `https://docs.stackone.com/gateway/concepts/overview.md`
 - For how AI agents call StackOne actions (via SDK, MCP, or A2A), see the `stackone-agents` skill
 
 ### Step 3: Account management
@@ -69,7 +68,7 @@ Consult `references/api-categories.md` for the StackOne API structure (Actions A
 User says: "How do I see which accounts are connected in StackOne?"
 
 Actions:
-1. Confirm they have an API key (created at https://app.stackone.com)
+1. Confirm they have an API key (see `https://docs.stackone.com/embed/api-keys.md` to create one)
 2. Show the curl command: `GET https://api.stackone.com/v2/accounts` with proper auth header
 3. Fetch `https://docs.stackone.com/platform/api-reference/v2/accounts/list-accounts.md`
 4. Explain the response fields and status values from the reference
