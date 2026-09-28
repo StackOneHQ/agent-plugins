@@ -52,16 +52,10 @@ Key details:
 
 ### Step 3: Account management
 
-Each linked account has:
-- `id` — assigned by StackOne
-- `connector` — the SaaS tool (e.g., `bamboohr`, `greenhouse`)
-- `owner_id` — the account owner's identifier
-- `status` — `active`, `error`, `inactive`
-
 To list accounts: `GET https://api.stackone.com/v2/accounts`
 To get one account: `GET https://api.stackone.com/v2/accounts/{id}`
 
-Fetch the accounts API reference for full details:
+Fetch the List Accounts reference for each account's fields and status values:
 `https://docs.stackone.com/platform/api-reference/v2/accounts/list-accounts.md`
 
 ### Step 4: Fetch API docs as needed
@@ -77,8 +71,8 @@ User says: "How do I see which accounts are connected in StackOne?"
 Actions:
 1. Confirm they have an API key (created at https://app.stackone.com)
 2. Show the curl command: `GET https://api.stackone.com/v2/accounts` with proper auth header
-3. Explain the response fields: `id`, `connector`, `status`, `owner_id`
-4. Fetch `https://docs.stackone.com/platform/api-reference/v2/accounts/list-accounts.md` for the full schema
+3. Fetch `https://docs.stackone.com/platform/api-reference/v2/accounts/list-accounts.md`
+4. Explain the response fields and status values from the reference
 
 Result: Working command with explanation of account statuses and how to use account IDs.
 
