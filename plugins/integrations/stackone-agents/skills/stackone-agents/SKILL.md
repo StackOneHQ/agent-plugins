@@ -27,7 +27,8 @@ These sources contain the latest code examples and API surface. Do not rely sole
 |--------|----------|----------|
 | **TypeScript SDK** (`@stackone/ai`) | Custom agents with OpenAI, Vercel AI, Claude, Claude Agent SDK | TypeScript/JavaScript |
 | **Python SDK** (`stackone-ai`) | Custom agents with OpenAI, LangChain, LangGraph, CrewAI, PydanticAI | Python |
-| **MCP Server** | Agents in any framework with an MCP client (Anthropic SDK, OpenAI Agents SDK, Google ADK, Azure AI Foundry, etc.) | Any |
+| **MCP Server (agent code)** | Agents in any framework with an MCP client (Anthropic SDK, OpenAI Agents SDK, Google ADK, Azure AI Foundry, etc.) | Any |
+| **MCP Server (AI apps)** | Using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps via OAuth, no code needed | Any (config only) |
 | **A2A Protocol** | Agent-to-agent communication | Any |
 
 Consult `references/integration-guide.md` for a detailed decision tree.
