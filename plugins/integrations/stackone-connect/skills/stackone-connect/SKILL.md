@@ -23,6 +23,7 @@ When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`,
 **If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time):
 - Fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search the "Embed" section for the page's topic (e.g. "Connect Session", "Account Linking", "Auth Link", "Handle Account Events") and use the URL listed there.
 - For the Hub package itself, the repository README is the fallback: `https://raw.githubusercontent.com/StackOneHQ/hub/main/README.md`.
+- If the docs don't cover the question, say so and suggest contacting StackOne support. Don't invent an answer.
 
 ## Instructions
 
