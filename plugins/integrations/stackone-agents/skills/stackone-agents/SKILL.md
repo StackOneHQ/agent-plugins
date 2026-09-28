@@ -102,7 +102,15 @@ Fetch the overview first: `https://docs.stackone.com/embed/call-actions/mcp.md`.
 npx @modelcontextprotocol/inspector https://api.stackone.com/mcp
 ```
 
-**Using StackOne in an AI app instead of building an agent?** Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps connect to `https://mcp.stackone.com/mcp` with OAuth, with no API key or account ID needed. See `https://docs.stackone.com/connect/ai-platforms/overview` (and Example 2 below).
+### Step 2d: MCP Server path (no code required)
+
+For using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps.
+
+AI apps connect to `https://mcp.stackone.com/mcp` with OAuth. The user signs in, then picks the project, linked accounts and actions on the consent screen, so no API key or account ID is needed.
+
+Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown. If the app isn't listed there, search `https://docs.stackone.com/llms.txt` for it.
+
+See Example 2 for Claude Code.
 
 ### Step 3: Handle multi-tenant access
 
