@@ -99,7 +99,7 @@ StackOne's MCP server for agent code is at `https://api.stackone.com/mcp`. Every
 - `Authorization: Basic <base64(API_KEY:)>` (append a colon to the API key, then base64 encode)
 - `x-account-id: <ACCOUNT_ID>` (switch this per customer for multi-tenant agents; see Step 3)
 
-Fetch the overview first: `https://docs.stackone.com/embed/call-actions/mcp.md`. It links to a setup guide for each supported agent framework (Anthropic SDK, OpenAI Agents SDK, LangChain, Google ADK, etc.). Follow the link that matches the user's framework, appending `.md` to get the page as markdown. If the framework isn't listed there, search `https://docs.stackone.com/llms.txt` for it.
+Fetch the overview first: `https://docs.stackone.com/embed/call-actions/mcp.md`. It links to a setup guide for each supported agent framework (Anthropic SDK, OpenAI Agents SDK, LangChain, Google ADK, etc.). Follow the link that matches the user's framework, appending `.md` to get the page as markdown.
 
 **Testing the MCP connection**: see `https://docs.stackone.com/embed/call-actions/mcp/troubleshooting` for using MCP Inspector with the auth headers:
 ```bash
@@ -112,7 +112,7 @@ For using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other A
 
 AI apps connect to `https://mcp.stackone.com/mcp` with OAuth. The user signs in, then picks the project, linked accounts and actions on the consent screen, so no API key or account ID is needed.
 
-Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown. If the app isn't listed there, search `https://docs.stackone.com/llms.txt` for it.
+Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown.
 
 See Example 2 for Claude Code.
 
