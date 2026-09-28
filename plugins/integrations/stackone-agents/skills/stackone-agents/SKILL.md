@@ -31,8 +31,8 @@ These sources contain the latest code examples and API surface. Do not rely sole
 |--------|----------|----------|
 | **TypeScript SDK** (`@stackone/ai`) | Custom agents with OpenAI, Vercel AI, Claude, Claude Agent SDK | TypeScript/JavaScript |
 | **Python SDK** (`stackone-ai`) | Custom agents with OpenAI, LangChain, LangGraph, CrewAI, PydanticAI | Python |
-| **MCP Server (agent code)** | Agents in any framework with an MCP client (Anthropic SDK, OpenAI Agents SDK, Google ADK, Azure AI Foundry, etc.) | Any |
 | **MCP Server (AI apps)** | Using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps via OAuth, no code needed | Any (config only) |
+| **MCP Server (agent code)** | Agents in any framework with an MCP client (Anthropic SDK, OpenAI Agents SDK, Google ADK, Azure AI Foundry, etc.) | Any |
 | **A2A Protocol** | Agent-to-agent communication | Any |
 
 Consult `references/integration-guide.md` for a detailed decision tree.
@@ -91,7 +91,17 @@ Fetch the Python README for usage examples and framework integrations:
 
 The Python SDK supports: OpenAI, LangChain, LangGraph, CrewAI, PydanticAI.
 
-### Step 2c: MCP from your agent code
+### Step 2c: MCP Server path (no code required)
+
+For using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps.
+
+AI apps connect to `https://mcp.stackone.com/mcp` with OAuth. The user signs in, then picks the project, linked accounts and actions on the consent screen, so no API key or account ID is needed.
+
+Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown.
+
+See Example 2 for Claude Code.
+
+### Step 2d: MCP from your agent code
 
 Use this path for frameworks the SDKs don't cover (e.g. Google ADK, OpenAI Agents SDK, Azure AI Foundry) or when you prefer a standard MCP client.
 
@@ -105,16 +115,6 @@ Fetch the overview first: `https://docs.stackone.com/embed/call-actions/mcp.md`.
 ```bash
 npx @modelcontextprotocol/inspector https://api.stackone.com/mcp
 ```
-
-### Step 2d: MCP Server path (no code required)
-
-For using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps.
-
-AI apps connect to `https://mcp.stackone.com/mcp` with OAuth. The user signs in, then picks the project, linked accounts and actions on the consent screen, so no API key or account ID is needed.
-
-Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown.
-
-See Example 2 for Claude Code.
 
 ### Step 3: Handle multi-tenant access
 
