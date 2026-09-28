@@ -1,0 +1,21 @@
+{
+  "prompt": "How is connector usage billed on StackOne, and is there an extra cost for a Workday sandbox?",
+  "skill": "stackone-platform",
+  "skill_should_fire": false,
+  "skill_note": "No skill covers pricing or billing. The right answer is to say so and point to support or the account team.",
+  "fetch": [],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "points-to-support",
+      "match": "[Cc]ontact (StackOne('s)? )?[Ss]upport|StackOne [Ss]upport|support team|account (team|manager)|sales",
+      "note": "Billing questions go to support or the account team."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Pricing and billing are not covered by the developer documentation, so the reply says so.",
+    "The reply suggests contacting StackOne support or the account team.",
+    "The reply does not quote prices, tiers or sandbox costs."
+  ]
+}

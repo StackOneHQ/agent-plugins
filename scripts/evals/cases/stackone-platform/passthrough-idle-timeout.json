@@ -1,0 +1,33 @@
+{
+  "prompt": "I have a custom passthrough action that runs a Workday report. While Workday generates it, the connection goes quiet with no bytes for a long time. What is StackOne's idle timeout on that upstream connection, and which status code do I get back when it gives up?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Platform territory, but the timeout is not documented. The right answer is to say so and point to support, not to guess a number.",
+  "fetch": [
+    {
+      "name": "checked-the-docs",
+      "match": "docs\\.stackone\\.com/(llms\\.txt|connect/troubleshooting|platform-api/)",
+      "note": "The agent must have looked before saying the docs do not cover it."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "points-to-support",
+      "match": "[Cc]ontact (StackOne('s)? )?[Ss]upport|StackOne [Ss]upport|support team",
+      "note": "The docs name the channel as StackOne support."
+    }
+  ],
+  "no_reply": [
+    {
+      "name": "no-invented-timeout-value",
+      "match": "\\b\\d{2,3}\\s?(s|sec|secs|seconds)\\b",
+      "note": "Any specific number of seconds is invention; the docs give none."
+    }
+  ],
+  "reference": [
+    "The documentation does not state an idle or read timeout for upstream connections, so the reply says so rather than giving a number.",
+    "The reply suggests contacting StackOne support for the timeout and the status code.",
+    "The reply does not present a specific number of seconds or a specific status code as StackOne's documented behaviour."
+  ]
+}

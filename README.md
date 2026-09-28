@@ -57,19 +57,25 @@ Each plugin includes a focused skill, step-by-step workflows, concrete examples,
 agent-plugins/
 ├── .claude-plugin/
 │   └── marketplace.json          # Marketplace manifest — lists all plugins
-└── plugins/
-    ├── integrations/
-    │   ├── stackone-platform/
-    │   ├── stackone-connect/
-    │   ├── stackone-agents/
-    │   ├── stackone-connectors/
-    │   ├── stackone-cli/
-    │   └── stackone-unified-connectors/
-    └── security/
-        └── stackone-defender/    # ships its own hooks/, scripts/, package.json
+├── plugins/
+│   ├── integrations/
+│   │   ├── stackone-platform/
+│   │   ├── stackone-connect/
+│   │   ├── stackone-agents/
+│   │   ├── stackone-connectors/
+│   │   ├── stackone-cli/
+│   │   └── stackone-unified-connectors/
+│   └── security/
+│       └── stackone-defender/    # ships its own hooks/, scripts/, package.json
+└── scripts/
+    └── evals/                    # eval runner and, under cases/<plugin>/, each plugin's regression cases
 ```
 
 Each plugin directory contains its own `.claude-plugin/plugin.json`, a `skills/<name>/` folder, and (for `stackone-defender`) the PostToolUse hook config plus ML scripts.
+
+## Evals
+
+`scripts/evals/cases/<plugin>/` holds regression cases for each integration plugin: a prompt a user might type plus host-neutral checks on the outcome (which docs page the agent fetched, which names its reply used, and optionally a model's judgement against reference facts). They live beside the runner so the plugins ship without them. `scripts/evals/run-host.ts` runs a plugin's cases on Claude Code, Antigravity, Cursor or Codex with the same checks. See the [cases README](scripts/evals/cases/README.md) and the [runner README](scripts/evals/README.md).
 
 ## Design Philosophy
 
