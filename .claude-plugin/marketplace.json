@@ -91,7 +91,7 @@
     {
       "name": "stackone-cli",
       "source": "./plugins/integrations/stackone-cli",
-      "description": "Build and deploy custom StackOne connectors using the CLI and Connector Engine.",
+      "description": "Build, test and deploy custom StackOne connectors with the StackOne CLI.",
       "version": "3.2.1",
       "category": "integrations",
       "tags": [
