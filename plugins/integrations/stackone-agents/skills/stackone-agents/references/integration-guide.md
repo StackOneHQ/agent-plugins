@@ -23,7 +23,7 @@ Are you writing code for a custom agent?
 │       (https://api.stackone.com/mcp, API key + x-account-id)
 │       └── Fetch docs.stackone.com/embed/call-actions/mcp.md and follow the framework guide link
 ├── NO → Are you using StackOne from an existing AI app (Claude Code, Cursor, ChatGPT, ...)?
-│   ├── YES → Connect via OAuth (https://mcp.stackone.com/mcp)
+│   ├── YES → Connect with a session token URL (https://api.stackone.com/mcp?token={session_token})
 │   │   └── Fetch docs.stackone.com/connect/ai-platforms/overview.md and follow the app guide link
 │   └── NO → Agent-to-agent communication?
 │       └── YES → Use A2A Protocol

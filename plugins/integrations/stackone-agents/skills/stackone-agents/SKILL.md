@@ -31,7 +31,7 @@ These sources contain the latest code examples and API surface. Do not rely sole
 |--------|----------|----------|
 | **TypeScript SDK** (`@stackone/ai`) | Custom agents with OpenAI, Vercel AI, Claude, Claude Agent SDK | TypeScript/JavaScript |
 | **Python SDK** (`stackone-ai`) | Custom agents with OpenAI, LangChain, LangGraph, CrewAI, PydanticAI | Python |
-| **MCP Server (AI apps)** | Using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps via OAuth, no code needed | Any (config only) |
+| **MCP Server (AI apps)** | Using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps via a session token URL, no code needed | Any (config only) |
 | **MCP Server (agent code)** | Agents in any framework with an MCP client (Anthropic SDK, OpenAI Agents SDK, Google ADK, Azure AI Foundry, etc.) | Any |
 | **A2A Protocol** | Agent-to-agent communication | Any |
 
@@ -95,9 +95,14 @@ The Python SDK supports: OpenAI, LangChain, LangGraph, CrewAI, PydanticAI.
 
 For using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps.
 
-AI apps connect to `https://mcp.stackone.com/mcp` with OAuth. The user signs in, then picks the project, linked accounts and actions on the consent screen, so no API key or account ID is needed.
+AI apps connect with a session token URL, which carries its own credential, so no API key or account ID header is needed:
+1. In the StackOne dashboard, go to **Connectors**, open a connector, then click **Use in Agent**.
+2. Pick a linked account, set the expiry (one year by default), select **HTTPS MCP** and copy the URL. It looks like `https://api.stackone.com/mcp?token={session_token}`.
+3. Add the URL to the app as an MCP server with no authentication. Each URL covers one linked account, so add one server per account.
 
-Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown.
+Anyone holding the URL has access to that account until it expires, so treat it like a password and never commit it.
+
+Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown. Use the guide's "Connecting with a session token instead" section for app-specific steps.
 
 See Example 2 for Claude Code.
 
@@ -152,9 +157,9 @@ Result: Working agent that can query BambooHR employees through StackOne.
 User says: "How do I use StackOne MCP in Claude Code?"
 
 Actions:
-1. Fetch `https://docs.stackone.com/connect/ai-platforms/claude-code` for the setup guide
-2. Run `claude mcp add --transport http --scope user stackone https://mcp.stackone.com/mcp`
-3. In Claude Code, run `/mcp`, select **stackone**, then **Authenticate** to complete the OAuth consent flow
+1. Fetch `https://docs.stackone.com/connect/ai-platforms/claude-code.md` and use its "Connecting with a session token instead" section
+2. Have the user generate a session token URL (Connectors → open a connector → **Use in Agent** → **HTTPS MCP**)
+3. Run `claude mcp add --transport http gsheets "https://api.stackone.com/mcp?token={session_token}"`, one server per linked account (e.g. `gsheets`, `slack`)
 
 Result: Claude Code can call StackOne tools directly.
 
