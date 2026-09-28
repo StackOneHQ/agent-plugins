@@ -19,6 +19,10 @@ SDK APIs change frequently. Before writing code:
 
 These sources contain the latest code examples and API surface. Do not rely solely on this skill for code snippets.
 
+**If any URL in this skill returns 404** (StackOne reorganizes its docs from time to time):
+- For a `docs.stackone.com` page, fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search it for the page's topic (e.g. "MCP", "AI Platforms", "Agent2Agent", "Claude Code") and use the URL listed there.
+- For an SDK README, open the repository instead (`https://github.com/stackoneHQ/stackone-ai-node` or `https://github.com/stackoneHQ/stackone-ai-python`) and find the current README.
+
 ## Instructions
 
 ### Step 1: Choose an integration method
