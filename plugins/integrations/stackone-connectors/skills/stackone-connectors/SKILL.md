@@ -13,12 +13,12 @@ metadata:
 ## Important
 
 Connector availability changes frequently as StackOne adds new providers. Before answering:
-1. Fetch `https://docs.stackone.com/connectors/introduction.md` for the current connector list. Each entry carries the connector's `key`, name, categories, action count and release stage
+1. Fetch `https://docs.stackone.com/connectors/introduction.md` for the current connector list. Each entry carries the connector's `key`, name, categories and action count, plus its release stage when it isn't generally available
 2. For a specific provider, fetch its StackOne connector page (e.g. `https://docs.stackone.com/connectors/workday/index.md`). It lists that connector's actions, authentication methods and setup guides
 
 Never assume a connector exists or doesn't exist without checking live docs. The connectors list only confirms a connector exists. For its actions or authentication methods, read its StackOne connector page, not the provider's own API documentation.
 
-When fetching any `docs.stackone.com` page, append `.md` to the URL to get it as markdown.
+When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`, append `.md` to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
 
 **If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time):
 - Fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Its "Connectors" section lists one page per connector by provider name, plus that connector's changelog and authentication guides. Use the URL listed there.
