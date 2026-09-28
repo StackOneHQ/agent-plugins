@@ -95,14 +95,9 @@ The Python SDK supports: OpenAI, LangChain, LangGraph, CrewAI, PydanticAI.
 
 For using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps.
 
-AI apps connect with a session token URL, which carries its own credential, so no API key or account ID header is needed:
-1. In the StackOne dashboard, go to **Connectors**, open a connector, then click **Use in Agent**.
-2. Pick a linked account, set the expiry (one year by default), select **HTTPS MCP** and copy the URL. It looks like `https://api.stackone.com/mcp?token={session_token}`.
-3. Add the URL to the app as an MCP server with no authentication. Each URL covers one linked account, so add one server per account.
+AI apps connect using a session token URL generated in the StackOne dashboard. Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown, and use its "Connecting with a session token instead" section.
 
-Anyone holding the URL has access to that account until it expires, so treat it like a password and never commit it.
-
-Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app, appending `.md` to get the page as markdown. Use the guide's "Connecting with a session token instead" section for app-specific steps.
+The URL grants access to a linked account on its own, so treat it like a password and never commit it.
 
 See Example 2 for Claude Code.
 
@@ -158,8 +153,7 @@ User says: "How do I use StackOne MCP in Claude Code?"
 
 Actions:
 1. Fetch `https://docs.stackone.com/connect/ai-platforms/claude-code.md` and use its "Connecting with a session token instead" section
-2. Have the user generate a session token URL (Connectors → open a connector → **Use in Agent** → **HTTPS MCP**)
-3. Run `claude mcp add --transport http gsheets "https://api.stackone.com/mcp?token={session_token}"`, one server per linked account (e.g. `gsheets`, `slack`)
+2. Walk the user through generating a session token URL and adding it with `claude mcp add`, as described in that section
 
 Result: Claude Code can call StackOne tools directly.
 
