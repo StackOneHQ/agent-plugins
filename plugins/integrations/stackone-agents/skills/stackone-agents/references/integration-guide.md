@@ -52,7 +52,7 @@ Are you writing code for a custom agent?
 
 ## Key Documentation URLs
 
-Each overview page below links to its individual guides, so fetch the overview and follow the relevant link rather than guessing guide URLs. Append `.md` to any docs.stackone.com page to get markdown.
+Each overview page below links to its individual guides, so fetch the overview and follow the relevant link rather than guessing guide URLs.
 
 - TypeScript SDK README: `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-node/refs/heads/main/README.md`
 - Python SDK README: `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-python/refs/heads/main/README.md`
