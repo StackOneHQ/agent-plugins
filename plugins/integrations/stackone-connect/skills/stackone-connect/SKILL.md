@@ -104,15 +104,9 @@ For an Auth Link instead of an embedded Hub, fetch `https://docs.stackone.com/em
 
 ### Step 4: Set up webhook listeners
 
-Webhooks are required for Auth Links (no frontend callbacks) and recommended for the Embedded Hub:
+Webhooks are required for Auth Links (no frontend callbacks) and recommended for the Embedded Hub.
 
-| Event | When it fires |
-|-------|---------------|
-| `account.created` | New account linked |
-| `account.updated` | Account changed, e.g. credentials refreshed |
-| `account.deleted` | Account disconnected |
-
-Fetch `https://docs.stackone.com/embed/handle-account-events.md` for subscribing to these events, verifying the signature and handling the payload. For webhook management in general (retries, secret rotation), fetch `https://docs.stackone.com/connect/webhooks.md`.
+Fetch `https://docs.stackone.com/embed/handle-account-events.md` for subscribing to the account events, verifying the signature and handling the payload, and `https://docs.stackone.com/platform-api/platform-events.md` for each event and its payload. For webhook management in general (retries, secret rotation), fetch `https://docs.stackone.com/connect/webhooks.md`.
 
 ### Step 5: Verify the connection
 
