@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires network access to fetch live documentation. TypeScript SDK requires Node.js and zod>=3.25. Python SDK requires Python 3.9+.
 metadata:
   author: stackone
-  version: "2.0"
+  version: "2.1"
 ---
 
 # StackOne Agents — AI Integration
@@ -15,9 +15,16 @@ metadata:
 SDK APIs change frequently. Before writing code:
 1. For TypeScript: fetch `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-node/refs/heads/main/README.md`
 2. For Python: fetch `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-python/refs/heads/main/README.md`
-3. For MCP setup: fetch `https://docs.stackone.com/mcp/quickstart`
+3. For MCP setup: fetch `https://docs.stackone.com/embed/call-actions/mcp.md`
 
 These sources contain the latest code examples and API surface. Do not rely solely on this skill for code snippets.
+
+When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`, append `.md` to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
+
+**If any URL in this skill returns 404, or a page doesn't cover what you need** (e.g. an overview page doesn't link the user's framework or app; StackOne reorganizes its docs from time to time):
+- For a `docs.stackone.com` page, fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search it for the page's topic (e.g. "MCP", "AI Platforms", "Agent2Agent", "Claude Code") and use the URL listed there.
+- For an SDK README, open the repository instead (`https://github.com/stackoneHQ/stackone-ai-node` or `https://github.com/stackoneHQ/stackone-ai-python`) and find the current README.
+- If the docs don't cover the question, say so and suggest contacting StackOne support. Don't invent an answer.
 
 ## Instructions
 
@@ -26,8 +33,9 @@ These sources contain the latest code examples and API surface. Do not rely sole
 | Method | Best for | Language |
 |--------|----------|----------|
 | **TypeScript SDK** (`@stackone/ai`) | Custom agents with OpenAI, Vercel AI, Claude, Claude Agent SDK | TypeScript/JavaScript |
-| **Python SDK** (`stackone-ai`) | Custom agents with LangChain, CrewAI, PydanticAI, Google ADK | Python |
-| **MCP Server** | Claude Code, Claude Desktop, ChatGPT, Cursor, Windsurf — no code needed | Any (config only) |
+| **Python SDK** (`stackone-ai`) | Custom agents with OpenAI, LangChain, LangGraph, CrewAI, PydanticAI | Python |
+| **MCP Server (AI apps)** | Using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps via a session token URL, no code needed | Any (config only) |
+| **MCP Server (agent code)** | Agents in any framework with an MCP client (Anthropic SDK, OpenAI Agents SDK, Google ADK, Azure AI Foundry, etc.) | Any |
 | **A2A Protocol** | Agent-to-agent communication | Any |
 
 Consult `references/integration-guide.md` for a detailed decision tree.
@@ -84,18 +92,29 @@ pip install stackone-ai
 Fetch the Python README for usage examples and framework integrations:
 `https://raw.githubusercontent.com/stackoneHQ/stackone-ai-python/refs/heads/main/README.md`
 
-The Python SDK supports: OpenAI, LangChain, CrewAI, PydanticAI, Google ADK.
+The Python SDK supports: OpenAI, LangChain, LangGraph, CrewAI, PydanticAI.
 
 ### Step 2c: MCP Server path (no code required)
 
-StackOne's MCP server is at `https://api.stackone.com/mcp`.
+For using StackOne from Claude Code, Claude Desktop, ChatGPT, Cursor and other AI apps.
 
-For client-specific setup instructions, fetch the relevant guide:
-- Claude Code: `https://docs.stackone.com/mcp/framework-guides/claude-code`
-- Claude Desktop: `https://docs.stackone.com/mcp/app-guides/claude-desktop`
-- Other clients: fetch `https://docs.stackone.com/llms.txt` and search for the client name
+AI apps connect using a session token URL generated in the StackOne dashboard. Fetch `https://docs.stackone.com/connect/ai-platforms/overview.md`. It links to a setup guide for each supported app. Follow the link for the user's app and use its "Connecting with a session token instead" section.
 
-**Testing the MCP connection**:
+The URL grants access to a linked account on its own, so treat it like a password and never commit it.
+
+See Example 2 for Claude Code.
+
+### Step 2d: MCP from your agent code
+
+Use this path for frameworks the SDKs don't cover (e.g. Google ADK, OpenAI Agents SDK, Azure AI Foundry) or when you prefer a standard MCP client.
+
+StackOne's MCP server for agent code is at `https://api.stackone.com/mcp`. Every request needs:
+- `Authorization: Basic <base64(API_KEY:)>` (append a colon to the API key, then base64 encode)
+- `x-account-id: <ACCOUNT_ID>` (switch this per customer for multi-tenant agents; see Step 3)
+
+Fetch the overview first: `https://docs.stackone.com/embed/call-actions/mcp.md`. It links to a setup guide for each supported agent framework (Anthropic SDK, OpenAI Agents SDK, LangChain, Google ADK, etc.). Follow the link that matches the user's framework.
+
+**Testing the MCP connection**: launch MCP Inspector, then add the `Authorization` and `x-account-id` headers in the Inspector UI before connecting (see `https://docs.stackone.com/embed/call-actions/mcp/troubleshooting.md`):
 ```bash
 npx @modelcontextprotocol/inspector https://api.stackone.com/mcp
 ```
@@ -136,9 +155,8 @@ Result: Working agent that can query BambooHR employees through StackOne.
 User says: "How do I use StackOne MCP in Claude Code?"
 
 Actions:
-1. Fetch `https://docs.stackone.com/mcp/framework-guides/claude-code` for the setup guide
-2. Walk through adding the MCP server config with their API key and account ID
-3. Test with `npx @modelcontextprotocol/inspector` first
+1. Fetch `https://docs.stackone.com/connect/ai-platforms/claude-code.md` and use its "Connecting with a session token instead" section
+2. Walk the user through generating a session token URL and adding it with `claude mcp add`, as described in that section
 
 Result: Claude Code can call StackOne tools directly.
 
