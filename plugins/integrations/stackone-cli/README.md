@@ -1,6 +1,6 @@
 # stackone-cli
 
-Build and deploy custom StackOne connectors using the CLI and Connector Engine.
+Build, test and deploy custom StackOne connectors with the StackOne CLI.
 
 ## Install
 
@@ -13,5 +13,5 @@ Build and deploy custom StackOne connectors using the CLI and Connector Engine.
 
 - "Build a custom connector"
 - "Deploy my connector"
-- "Use the StackOne AI builder"
+- "Customize an existing connector"
 - "Set up CI/CD for connectors"
