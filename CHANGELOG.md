@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.2.2](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.2.1...stackone-agent-plugins-v3.2.2) (2026-09-30)
+
+
+### Bug Fixes
+
+* **SOL-417:** stackone-platform - update stale StackOne docs links and v2 accounts ([#45](https://github.com/StackOneHQ/agent-plugins/issues/45)) ([e869320](https://github.com/StackOneHQ/agent-plugins/commit/e8693205d7c52cb6c6c63a8c0a1399e6a86cc512))
+* **SOL-418:** stackone-connect - update stale StackOne docs links and hub guidance ([#42](https://github.com/StackOneHQ/agent-plugins/issues/42)) ([f4ea139](https://github.com/StackOneHQ/agent-plugins/commit/f4ea13944e2e74c6af83b3d13440e3ce83c6259b))
+* **SOL-419:** stackone-agents - update stale StackOne docs links and MCP guidance ([#40](https://github.com/StackOneHQ/agent-plugins/issues/40)) ([9a76d44](https://github.com/StackOneHQ/agent-plugins/commit/9a76d445b1012b595a2ec49d508d2569cd8e734c))
+* **SOL-420:** stackone-connectors - update stale StackOne docs links and catalogue guidance ([#43](https://github.com/StackOneHQ/agent-plugins/issues/43)) ([d7b5010](https://github.com/StackOneHQ/agent-plugins/commit/d7b501041e1526a64c733ae82102340c47d465da))
+* **SOL-421:** stackone-cli - update stale StackOne docs links and connector workflow ([#41](https://github.com/StackOneHQ/agent-plugins/issues/41)) ([a9b0d46](https://github.com/StackOneHQ/agent-plugins/commit/a9b0d46ded8577e33e739a096bbb5067aef42c36))
+* **SOL-422:** stackone-unified-connectors - update stale StackOne docs links and description ([#44](https://github.com/StackOneHQ/agent-plugins/issues/44)) ([2e9d7d1](https://github.com/StackOneHQ/agent-plugins/commit/2e9d7d144abafb4409599070a66b678fa4359a7b))
+* **SOL-423:** stackone-defender - accurate claims and Defender docs link ([#46](https://github.com/StackOneHQ/agent-plugins/issues/46)) ([1633c97](https://github.com/StackOneHQ/agent-plugins/commit/1633c97b2eaea544c7cb4938f59e120d58e06d6d))
+* **SOL-424:** stackone-defender-antigravity - accurate claims and Defender docs link ([#47](https://github.com/StackOneHQ/agent-plugins/issues/47)) ([77b482f](https://github.com/StackOneHQ/agent-plugins/commit/77b482f1437d6e48fcbd752c52f92573e014fde7))
+
 ## [3.2.1](https://github.com/StackOneHQ/agent-plugins/compare/stackone-agent-plugins-v3.2.0...stackone-agent-plugins-v3.2.1) (2026-09-23)
 
 
