@@ -13,10 +13,10 @@ POST https://api.stackone.com/actions/rpc
 Actions are named `{provider}_{operation}_{entity}` (e.g., `bamboohr_list_employees`, `salesforce_get_contact`).
 
 For the full Actions API reference, fetch:
-`https://docs.stackone.com/platform/api-reference/actions/make-an-rpc-call-to-an-action`
+`https://docs.stackone.com/platform/api-reference/actions/make-an-rpc-call-to-an-action.md`
 
 To discover available actions for a provider, fetch:
-`https://docs.stackone.com/connectors/introduction`
+`https://docs.stackone.com/connectors/introduction.md`
 
 ## Platform API
 
@@ -24,28 +24,18 @@ The Platform API handles account management, not data operations:
 
 | Endpoint | Purpose |
 |----------|---------|
-| `GET /accounts` | List linked accounts |
-| `GET /accounts/{id}` | Get a specific linked account |
+| `GET /v2/accounts` | List linked accounts |
+| `GET /v2/accounts/{id}` | Get a specific linked account |
 | `POST /connect_sessions` | Create a connect session for account linking |
 
 For the full Platform API reference, fetch:
-`https://docs.stackone.com/platform/api-reference/accounts/list-accounts`
+`https://docs.stackone.com/platform/api-reference/v2/accounts/list-accounts.md`
+
+The "Platform API" section of `https://docs.stackone.com/llms.txt` lists every reference page (Accounts, Actions, Connect Sessions, Connector Profiles, Connectors, Logs, Webhooks and more).
 
 ## Connector Categories
 
-Connectors are organized into categories. Fetch the category introduction pages for details on available providers:
-
-| Category | Documentation |
-|----------|--------------|
-| HRIS | https://docs.stackone.com/hris/introduction |
-| ATS | https://docs.stackone.com/ats/introduction |
-| CRM | https://docs.stackone.com/crm/introduction |
-| LMS | https://docs.stackone.com/lms/introduction |
-| IAM | https://docs.stackone.com/iam/introduction |
-| Documents | https://docs.stackone.com/documents/introduction |
-| Accounting | https://docs.stackone.com/accounting/introduction |
-| Ticketing | https://docs.stackone.com/ticketing/introduction |
-| Messaging | https://docs.stackone.com/messaging/introduction |
+Connectors are organized into categories such as HRIS, ATS, CRM, LMS, IAM, Documents, Accounting and Ticketing. Fetch `https://docs.stackone.com/connectors/introduction.md`, which tags each connector with its categories, and filter by the category. Each connector's own page lists its actions.
 
 ## Authentication
 
