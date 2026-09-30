@@ -13,34 +13,36 @@
 | `enum` | Constrained values | status (requires enumMapper) |
 | `object` | Nested structure | work_location |
 
-## Inline Fields (Recommended Approach)
+## Action-Level fieldConfigs
 
-Define fields directly in `map_fields` step parameters:
+Define fields in the action's `fieldConfigs`. The `map_fields` step takes only a `dataSource` and applies them:
 
 ```yaml
-- stepId: map_data
-  stepFunction:
-    functionName: map_fields
-    version: '2'
-    parameters:
-      fields:
-        - targetFieldKey: email
-          expression: $.email           # Direct reference, NO step prefix
-          type: string
-        - targetFieldKey: department
-          expression: $.work.department  # Nested field reference
-          type: string
-      dataSource: $.steps.get_data.output.data
+fieldConfigs:
+  - targetFieldKey: email
+    expression: $.email           # Relative to each record, NO step prefix
+    type: string
+  - targetFieldKey: department
+    expression: $.work.department  # Nested field reference
+    type: string
+
+steps:
+  - stepId: map_data
+    stepFunction:
+      functionName: map_fields
+      version: '2'
+      parameters:
+        dataSource: $.steps.get_data.output.data
 ```
 
-**Why inline?** Action-level `fieldConfigs` can trigger schema inference that adds unwanted properties, causing build failures.
+The field snippets below are entries in `fieldConfigs`.
 
 ## Enum Mapping
 
 ### Basic Enum
 
 ```yaml
-fields:
+fieldConfigs:
   - targetFieldKey: status
     expression: $.status
     type: enum
@@ -59,7 +61,7 @@ fields:
 ```yaml
 enumMapper:
   matcher:
-    - matchExpression: '{{($.status || "").toLowerCase() == "active"}}'
+    - matchExpression: '{{lower($.status) == "active"}}'
       value: active
 ```
 
@@ -101,7 +103,7 @@ enumMapper:
 ### Simple Nested Field
 
 ```yaml
-fields:
+fieldConfigs:
   - targetFieldKey: city
     expression: $.location.city
     type: string
@@ -119,7 +121,7 @@ Provider returns:
 
 Your schema is flat:
 ```yaml
-fields:
+fieldConfigs:
   - targetFieldKey: department
     expression: $.work.department
     type: string
@@ -133,7 +135,7 @@ fields:
 ### Simple Array
 
 ```yaml
-fields:
+fieldConfigs:
   - targetFieldKey: email_addresses
     expression: $.emails[*]
     type: string
@@ -143,7 +145,7 @@ fields:
 ### JEXL Array Operations
 
 ```yaml
-fields:
+fieldConfigs:
   - targetFieldKey: export_formats
     expression: '{{keys(exportLinks)}}'
     type: string
@@ -155,7 +157,7 @@ fields:
 ### Fallback Values
 
 ```yaml
-fields:
+fieldConfigs:
   - targetFieldKey: file_format
     expression: '{{$.fullFileExtension || $.mimeType}}'
     type: string
@@ -164,7 +166,7 @@ fields:
 ### Conditional Logic
 
 ```yaml
-fields:
+fieldConfigs:
   - targetFieldKey: default_format
     expression: '{{exportLinks ? (keys(exportLinks)[0] || "application/pdf") : $.mimeType}}'
     type: string
@@ -173,7 +175,7 @@ fields:
 ### Boolean Check
 
 ```yaml
-fields:
+fieldConfigs:
   - targetFieldKey: is_exportable
     expression: '{{$.exportLinks != null}}'
     type: boolean
@@ -184,6 +186,20 @@ fields:
 Mapping HiBob employee data:
 
 ```yaml
+fieldConfigs:
+  - targetFieldKey: email
+    expression: $.email
+    type: string
+  - targetFieldKey: employee_id
+    expression: $.id
+    type: string
+  - targetFieldKey: department
+    expression: $.work.department
+    type: string
+  - targetFieldKey: job_title
+    expression: $.work.title
+    type: string
+
 steps:
   - stepId: get_employees
     stepFunction:
@@ -211,19 +227,6 @@ steps:
       functionName: map_fields
       version: '2'
       parameters:
-        fields:
-          - targetFieldKey: email
-            expression: $.email
-            type: string
-          - targetFieldKey: employee_id
-            expression: $.id
-            type: string
-          - targetFieldKey: department
-            expression: $.work.department
-            type: string
-          - targetFieldKey: job_title
-            expression: $.work.title
-            type: string
         dataSource: $.steps.get_employees.output.data
 
   - stepId: typecast_data
@@ -231,15 +234,6 @@ steps:
       functionName: typecast
       version: '2'
       parameters:
-        fields:
-          - targetFieldKey: email
-            type: string
-          - targetFieldKey: employee_id
-            type: string
-          - targetFieldKey: department
-            type: string
-          - targetFieldKey: job_title
-            type: string
         dataSource: $.steps.map_data.output.data
 
 result:
@@ -251,15 +245,13 @@ result:
 ### Wrong Expression Context
 
 ```yaml
-# WRONG - Using step prefix in inline fields
-parameters:
-  fields:
-    - expression: $.get_employees.email    # Don't use step prefix!
+# WRONG - Using step prefix in fieldConfigs
+fieldConfigs:
+  - expression: $.get_employees.email    # Don't use step prefix!
 
 # CORRECT - Direct field reference
-parameters:
-  fields:
-    - expression: $.email
+fieldConfigs:
+  - expression: $.email
 ```
 
 ### Missing Version
@@ -289,9 +281,9 @@ stepFunction:
 
 ## Validation Checklist
 
-- [ ] Using inline `fields` in map_fields parameters
-- [ ] Expressions use correct context (no step prefix for inline)
+- [ ] All schema fields declared in action-level `fieldConfigs`
+- [ ] Expressions use correct context (no step prefix in `fieldConfigs`)
 - [ ] `version: '2'` specified for map_fields and typecast
 - [ ] All `targetFieldKey` values match YOUR schema
 - [ ] All enum fields have `enumMapper` with null handler
-- [ ] typecast step includes all mapped fields
+- [ ] typecast step runs on the map_fields output

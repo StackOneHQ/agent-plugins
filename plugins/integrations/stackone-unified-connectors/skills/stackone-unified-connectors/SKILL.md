@@ -1,11 +1,11 @@
 ---
 name: stackone-unified-connectors
-description: Baseline skill for building unified/schema-based connectors that transform provider data into standardized schemas. Use alongside domain-specific schema skills (e.g., unified-hris-schema, unified-crm-schema) that define your organization's standard schemas. Use when user says "start unified build for [provider]", "build a schema-based connector", "map fields to schema", "test unified connector", or asks about field mapping, enum mapping, pagination configuration, or scope decisions. This skill provides implementation patterns; schema skills provide field definitions. Do NOT use for agentic/custom connectors (use stackone-cli), discovering existing connectors (use stackone-connectors), or building AI agents (use stackone-agents).
+description: Baseline skill for building unified/schema-based connectors that transform provider data into standardized schemas. Use alongside domain-specific schema skills that you create to define your organization's standard schemas. Use when user says "start unified build for [provider]", "build a schema-based connector", "map fields to schema", "test unified connector", or asks about field mapping, enum mapping, pagination configuration, or scope decisions. This skill provides implementation patterns; schema skills provide field definitions. Do NOT use for agentic/custom connectors (use stackone-cli), discovering existing connectors (use stackone-connectors), or building AI agents (use stackone-agents).
 license: MIT
 compatibility: Requires StackOne CLI (@stackone/cli). Requires access to provider API documentation.
 metadata:
   author: stackone
-  version: "2.1"
+  version: "2.2"
 ---
 
 # StackOne Unified Connectors
@@ -27,9 +27,15 @@ This separation allows you to maintain consistent schemas across all providers w
 ## Important
 
 Before building unified connectors:
-1. Read the CLI documentation: https://docs.stackone.com/guides/connector-engine/cli-reference
+1. Read the CLI documentation: https://docs.stackone.com/connector-building/stackone-cli.md
 2. Use `stackone help <command>` for command-specific details
 3. Always verify response structures with `--debug` before configuring mappings
+
+When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`, append `.md` to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
+
+**If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time):
+- Fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Search it for the page's topic (e.g. "StackOne CLI", "Defined Output Schemas", "Connector YAML Reference") and use the URL listed there.
+- If the docs don't cover the question, say so and suggest contacting StackOne support. Don't invent an answer.
 
 ## Core Principles
 
@@ -68,30 +74,28 @@ stepFunction:
   version: '2'          # REQUIRED - omitting causes empty results
 ```
 
-### 4. Use Inline Fields in map_fields Parameters
+### 4. Define Fields in Action-Level fieldConfigs
 
-Pass `fields` directly in `map_fields` step parameters rather than action-level `fieldConfigs`. This avoids schema inference issues that cause build failures.
+Declare the field mapping once in the action's `fieldConfigs`. The `map_fields` and `typecast` steps then take only a `dataSource` and apply those `fieldConfigs`.
 
 ```yaml
-# RECOMMENDED - Inline fields
-- stepId: map_data
-  stepFunction:
-    functionName: map_fields
-    version: '2'
-    parameters:
-      fields:
-        - targetFieldKey: email
-          expression: $.email           # Direct reference, NO step prefix
-          type: string
-      dataSource: $.steps.get_data.output.data
+fieldConfigs:
+  - targetFieldKey: email
+    expression: $.email           # Relative to each record, NO step prefix
+    type: string
+
+steps:
+  - stepId: map_data
+    stepFunction:
+      functionName: map_fields
+      version: '2'
+      parameters:
+        dataSource: $.steps.get_data.output.data
 ```
 
-### 5. Expression Context Depends on Location
+### 5. Expressions Are Relative to Each Record
 
-| Location | Expression Format | Example |
-|----------|------------------|---------|
-| Inline in `parameters.fields` | Direct field reference | `$.email`, `$.work.department` |
-| Action-level `fieldConfigs` | Step ID prefix required | `$.get_employees.email` |
+`fieldConfigs` expressions are evaluated against each record of the `map_fields` `dataSource`, so reference the record's fields directly: `$.email`, `$.work.department`. Do not prefix them with a step ID.
 
 ### 6. Never Suggest User-Side Mapping
 
@@ -186,36 +190,37 @@ See `references/scope-patterns.md` for detailed patterns.
 
 ### Step 5: Map Fields to Schema
 
-Use inline fields in map_fields parameters:
+Declare the mapping in action-level `fieldConfigs`, then run `map_fields` and `typecast` over the data:
 
 ```yaml
+fieldConfigs:
+  - targetFieldKey: id
+    expression: $.id
+    type: string
+  - targetFieldKey: email
+    expression: $.email
+    type: string
+  - targetFieldKey: department
+    expression: $.work.department  # Nested field
+    type: string
+  - targetFieldKey: status
+    expression: $.status
+    type: enum
+    enumMapper:
+      matcher:
+        - matchExpression: '{{$.status == "Active"}}'
+          value: active
+        - matchExpression: '{{$.status == "Inactive"}}'
+          value: inactive
+        - matchExpression: '{{$.status == null}}'
+          value: unknown
+
 steps:
   - stepId: map_data
     stepFunction:
       functionName: map_fields
       version: '2'
       parameters:
-        fields:
-          - targetFieldKey: id
-            expression: $.id
-            type: string
-          - targetFieldKey: email
-            expression: $.email
-            type: string
-          - targetFieldKey: department
-            expression: $.work.department  # Nested field
-            type: string
-          - targetFieldKey: status
-            expression: $.status
-            type: enum
-            enumMapper:
-              matcher:
-                - matchExpression: '{{$.status == "Active"}}'
-                  value: active
-                - matchExpression: '{{$.status == "Inactive"}}'
-                  value: inactive
-                - matchExpression: '{{$.status == null}}'
-                  value: unknown
         dataSource: $.steps.get_data.output.data
 
   - stepId: typecast_data
@@ -223,15 +228,6 @@ steps:
       functionName: typecast
       version: '2'
       parameters:
-        fields:
-          - targetFieldKey: id
-            type: string
-          - targetFieldKey: email
-            type: string
-          - targetFieldKey: department
-            type: string
-          - targetFieldKey: status
-            type: enum
         dataSource: $.steps.map_data.output.data
 
 result:
@@ -329,7 +325,7 @@ Actions:
 3. **If no skill**: Ask for schema, recommend creating `unified-hris-schema` skill for consistency across HRIS providers
 4. Research BambooHR endpoints: `/v1/employees`, `/v1/employees/directory`, custom reports
 5. Present options with trade-offs (field coverage, scopes, deprecation)
-6. After user selects, implement map_fields with inline fields using schema from skill
+6. After user selects, declare `fieldConfigs` using schema from skill and add map_fields and typecast steps
 7. Configure pagination with cursor support
 8. Test with `--debug`, verify field names match schema
 9. Document coverage
@@ -356,7 +352,7 @@ User says: "My unified connector returns provider field names instead of my sche
 Actions:
 1. Check if `targetFieldKey` uses YOUR schema names (not provider names)
 2. Verify `version: '2'` is specified on map_fields and typecast
-3. Check expression context - inline fields should NOT have step prefix
+3. Check expression context - `fieldConfigs` expressions should NOT have a step prefix
 4. Run with `--debug` to see raw response structure
 5. Verify dataSource path is correct
 
@@ -383,19 +379,15 @@ Result: Working pagination with correct cursor handling.
 
 ### Mapping produces empty results
 **Cause**: Missing `version: '2'` or wrong expression context.
-**Fix**: Add `version: '2'` to map_fields and typecast. For inline fields, use direct references (`$.email`) without step prefix.
+**Fix**: Add `version: '2'` to map_fields and typecast. In `fieldConfigs`, use direct references (`$.email`) without step prefix.
 
 ### Enum values not translating
 **Cause**: `matchExpression` doesn't match provider values (case-sensitive).
-**Fix**: Check exact provider values with `--debug`. Use `.toLowerCase()` for case-insensitive matching. Always include null/unknown fallback.
+**Fix**: Check exact provider values with `--debug`. Use the `lower()` function for case-insensitive matching (e.g. `'{{lower($.status) == "active"}}'`). Always include null/unknown fallback.
 
 ### Pagination returns same records
 **Cause**: Cursor not being sent or extracted correctly.
 **Fix**: Verify `iterator.key` matches API's expected parameter name. Check `nextKey` path against raw response. Verify `iterator.in` is correct (query/body/headers).
-
-### Build fails with schema inference errors
-**Cause**: Action-level `fieldConfigs` triggering unwanted schema inference.
-**Fix**: Use inline fields in `map_fields` parameters instead of action-level `fieldConfigs`.
 
 ### Dynamic inputs resolve to undefined
 **Cause**: Using `paginated_request` which doesn't handle `$.inputs.*` well.
@@ -406,8 +398,10 @@ Result: Working pagination with correct cursor handling.
 | Resource | URL |
 |----------|-----|
 | CLI Package | https://www.npmjs.com/package/@stackone/cli |
-| Connector Engine Docs | https://docs.stackone.com/guides/connector-engine |
-| CLI Reference | https://docs.stackone.com/guides/connector-engine/cli-reference |
+| Connector Building Docs | https://docs.stackone.com/connector-building/overview.md |
+| CLI Reference | https://docs.stackone.com/connector-building/stackone-cli.md |
+| Defined Output Schemas | https://docs.stackone.com/connector-building/defined-output-schemas.md |
+| Connector YAML Reference | https://docs.stackone.com/connector-yaml-reference/overview.md |
 
 ## Creating Domain-Specific Schema Skills
 
