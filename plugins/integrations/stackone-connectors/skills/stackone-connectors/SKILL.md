@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires network access to fetch live documentation from docs.stackone.com
 metadata:
   author: stackone
-  version: "2.0"
+  version: "2.1"
 ---
 
 # StackOne Connectors — Integration Discovery
@@ -13,36 +13,46 @@ metadata:
 ## Important
 
 Connector availability changes frequently as StackOne adds new providers. Before answering:
-1. Fetch `https://docs.stackone.com/connectors/introduction` for the current connector list
-2. For specific provider capabilities, fetch the relevant category API reference
+1. Fetch `https://docs.stackone.com/connectors/introduction.md` for the current connector list. Each entry carries the connector's `key`, name, categories and action count, plus its release stage when it isn't generally available
+2. For a specific provider, fetch its StackOne connector page (e.g. `https://docs.stackone.com/connectors/workday/index.md`). It lists that connector's actions, authentication methods and setup guides
 
-Never assume a connector exists or doesn't exist without checking live docs.
+Never assume a connector exists or doesn't exist without checking live docs. The connectors list only confirms a connector exists. For its actions or authentication methods, read its StackOne connector page, not the provider's own API documentation.
+
+When fetching a `docs.stackone.com` page whose URL doesn't already end in `.md`, append `.md` to get it as markdown. `llms.txt` is already plain text, so fetch it as is.
+
+**If any URL in this skill returns 404, or a page doesn't cover what you need** (StackOne reorganizes its docs from time to time):
+- Fetch `https://docs.stackone.com/llms.txt`, which indexes every docs page by title and description. Its "Connectors" section lists one page per connector by provider name, plus that connector's changelog and authentication guides. Use the URL listed there.
+- If neither the connector page nor the index covers the question (for example, a provider-side setting, or an arrangement with the provider), say the docs don't cover it and suggest contacting StackOne support. Don't invent an answer.
 
 ## Instructions
 
 ### Step 1: Identify the user's integration need
 
 Common patterns:
-- **"What providers do you support for X?"** → Check the category on the connectors page
-- **"Can I do Y with provider Z?"** → Check the provider's supported actions in the API reference
+- **"What providers do you support for X?"** → Filter the connectors list by category
+- **"Can I do Y with provider Z?"** → Fetch provider Z's connector page and check its actions
 - **"Recommend an integration for my use case"** → Match the use case to a category, then list available providers
+- **"Can I list connectors or actions from code?"** → Use the API (see Step 3)
 
-### Step 2: Look up connector availability
+### Step 2: Find the provider's connector page
 
-Fetch `https://docs.stackone.com/connectors/introduction` for the full, current list.
+Find the provider in the connectors list or in the "Connectors" section of `llms.txt` and use the page URL listed there. The connector key is not always the provider's everyday name (SAP ERP is listed as SAP S/4HANA, for example), so look the page up rather than building the URL from a guess.
 
-Consult `references/category-overview.md` for a snapshot of categories and example providers. But always verify against live docs since new connectors are added regularly.
+Search by the provider's official name and by its parent company's name. A provider may be listed under a product name the user didn't use.
 
 ### Step 3: Check available actions for a provider
 
-Each connector exposes its own set of provider-specific actions. Action counts vary significantly — Salesforce has 370+ actions, HubSpot has 100+, while smaller providers may have a handful.
-
-To find what's available for a specific provider:
-1. Fetch `https://docs.stackone.com/connectors/introduction`
-2. Find the provider and check its listed actions
-3. For action details, fetch `https://docs.stackone.com/platform/api-reference/actions/make-an-rpc-call-to-an-action`
+Read the Actions section of the provider's connector page. Action counts vary widely between providers, so take the list from the page rather than estimating it.
 
 Actions are named `{provider}_{operation}_{entity}` (e.g., `bamboohr_list_employees`, `salesforce_get_contact`).
+
+To list connectors and actions from code instead of the docs, for example to build a catalogue in the user's own product, use the Connectors API:
+
+| Need | Reference page |
+|------|----------------|
+| Every connector available to the project | `https://docs.stackone.com/platform/api-reference/v2/connectors/list-connectors.md` |
+| One connector's details, authentication methods and actions | `https://docs.stackone.com/platform/api-reference/v2/connectors/get-connector.md` |
+| One action's inputs and result | `https://docs.stackone.com/platform/api-reference/v2/connectors/get-connector-action.md` |
 
 ### Step 4: Execute actions via the Actions API
 
@@ -60,15 +70,17 @@ curl -X POST https://api.stackone.com/actions/rpc \
 
 AI agents typically call actions via the SDK or MCP rather than raw API calls — see the `stackone-agents` skill for SDK/MCP integration.
 
-Fetch `https://docs.stackone.com/platform/api-reference/actions/make-an-rpc-call-to-an-action` for the full RPC reference.
+Fetch `https://docs.stackone.com/embed/call-actions/rpc-http.md` for the calling guide, and `https://docs.stackone.com/platform/api-reference/actions/make-an-rpc-call-to-an-action.md` for the full RPC reference.
 
 ### Step 5: Test before building
 
-- **AI Playground**: https://app.stackone.com/playground — test API calls interactively
-- **MCP Inspector**: `npx @modelcontextprotocol/inspector https://api.stackone.com/mcp` — test via MCP
-- **Postman**: importable collection available from the docs
+- **Playground**: try actions in natural language before writing code. Fetch `https://docs.stackone.com/embed/call-actions/troubleshooting/playground.md`
+- **MCP Inspector**: `npx @modelcontextprotocol/inspector https://api.stackone.com/mcp` — test via MCP. Add the `Authorization` and `x-account-id` headers in the Inspector UI before connecting (see `https://docs.stackone.com/embed/call-actions/mcp/troubleshooting.md`)
+- **Postman**: importable collection available from the docs. Fetch `https://docs.stackone.com/embed/call-actions/troubleshooting/postman.md`
 
 ## Release stages
+
+The connectors list and each connector page show a release stage when a connector isn't generally available.
 
 | Stage | Meaning | Recommendation |
 |-------|---------|----------------|
@@ -83,22 +95,22 @@ Fetch `https://docs.stackone.com/platform/api-reference/actions/make-an-rpc-call
 User says: "Which HRIS tools does StackOne support?"
 
 Actions:
-1. Fetch `https://docs.stackone.com/connectors/introduction`
+1. Fetch `https://docs.stackone.com/connectors/introduction.md`
 2. Filter for the HRIS category
-3. List available providers with their release stages and action counts
-4. For specific providers the user is interested in, list their available actions
+3. List available providers with their release stages
+4. For specific providers the user is interested in, fetch their connector pages and list their actions
 
-Result: Current list of HRIS connectors with per-provider action counts.
+Result: Current list of HRIS connectors, with actions for the providers the user cares about.
 
 ### Example 2: User wants to know what they can do with a specific provider
 
 User says: "What can I do with BambooHR through StackOne?"
 
 Actions:
-1. Fetch `https://docs.stackone.com/connectors/introduction` and find BambooHR
-2. List the available actions (e.g., `bamboohr_list_employees`, `bamboohr_get_employee`, etc.)
+1. Find BambooHR's connector page in the connectors list or `llms.txt` and fetch it
+2. List the available actions from the page (e.g., `bamboohr_list_employees`, `bamboohr_get_employee`, etc.)
 3. Explain the Actions API for executing them, or recommend using the SDK/MCP for agent integration
-4. Fetch the Actions RPC reference for payload details if they need the raw API
+4. Fetch the RPC/HTTP guide for payload details if they need the raw API
 
 Result: Full list of BambooHR actions with how to call them.
 
@@ -107,11 +119,10 @@ Result: Full list of BambooHR actions with how to call them.
 User says: "Does StackOne support our custom HR tool?"
 
 Actions:
-1. Check the connectors page — it may exist under a different name
-2. If not found, explain two options:
-   a. Request it: `https://docs.stackone.com/connectors/add-new`
-   b. Build it: use the Connector Engine (see `stackone-cli` skill)
-3. If they have budget/urgency, recommend the AI Builder for faster custom connector development
+1. Check the connectors list and `llms.txt`. It may exist under a different name
+2. If not found, explain the two options from the "Add a New Connector or Action" section of the connectors page:
+   a. Request it from StackOne
+   b. Build it: fetch `https://docs.stackone.com/connector-building/overview.md` (see the `stackone-cli` skill)
 
 Result: Clear path forward — either request or build.
 
@@ -119,18 +130,16 @@ Result: Clear path forward — either request or build.
 
 ### Can't find a specific provider
 **Cause**: Provider may be listed under a different name, or may not be supported yet.
-- Search the connectors page by the provider's official name
+- Search the connectors list by the provider's official name
 - Check if it's under a parent company name (e.g., "Microsoft Entra ID" not "Azure AD")
 - If not found, suggest requesting it or building a custom connector
 
 ### Action returns "not supported" for a provider
 **Cause**: The requested action doesn't exist for this provider.
-- Each provider has its own set of actions — check the connectors page for what's available
+- Each provider has its own set of actions. Check the provider's connector page for what's available
 - Action names include the provider prefix (e.g., `bamboohr_list_employees` not `list_employees`)
 - Some actions require specific OAuth scopes on the provider side
 
 ### Connector logos not loading
-**Cause**: Incorrect slug format.
-- Logo URL format: `https://stackone-logos.com/api/{connector-slug}/filled/png`
-- Slugs are lowercase, hyphenated (e.g., `bamboo-hr`, `google-drive`)
-- Fetch the connectors page to verify the exact slug
+**Cause**: Incorrect logo URL.
+- Take the logo URL from the connector's `icon` field in the connectors list. The logo slug does not always match the connector key
