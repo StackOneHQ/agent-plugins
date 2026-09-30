@@ -4,7 +4,7 @@ On-device prompt-injection and jailbreak detection for Claude Code. Runs as a `P
 
 No telemetry, no cloud dependency, and no network egress during scanning. The classifier runs entirely on your machine. (First-run install fetches the ML dependencies from npm; subsequent scans are fully offline.)
 
-**Links** · Built into StackOne, [learn more](https://www.stackone.com/platform/prompt-injection-guard/) · [`@stackone/defender` on npm](https://www.npmjs.com/package/@stackone/defender) (the underlying library this plugin wraps)
+**Links** · Built into StackOne, [learn more](https://www.stackone.com/platform/prompt-injection-guard/) · [Defender in the StackOne docs](https://docs.stackone.com/secure/defender) · [`@stackone/defender` on npm](https://www.npmjs.com/package/@stackone/defender) (the underlying library this plugin wraps)
 
 ## Why
 
@@ -86,7 +86,7 @@ Default thresholds and the model path live in `scripts/defender-daemon.config.js
 }
 ```
 
-`enableTier1` is off by default. Tier 1 (regex patterns) is brittle and high-FP on prose discussing attacks. Tier 2 (the multihead ONNX classifier with Static Frequency Estimation preprocessing) is the sole decision-maker.
+`enableTier1` is off by default. Tier 1 (regex patterns) is brittle and high-FP on prose discussing attacks. Tier 2 (the multihead ONNX classifier) is the sole decision-maker. `useSfe` turns on the Semantic Field Extractor (SFE), which drops metadata and identifier fields before Tier 2 scores the payload. For how Tier 1, Tier 2 and the Semantic Field Extractor work, see [Defender](https://docs.stackone.com/secure/defender) in the StackOne docs.
 
 The daemon reads this config only on startup, and it is a detached long-lived process that outlives your shell. To pick up config changes, stop the running daemon (look up the PID in `~/.claude/defender-daemon.json` and `kill` it, or delete `~/.claude/defender.sock` plus `~/.claude/defender-daemon.json`) and the next tool call will spawn a fresh daemon with the new config.
 
@@ -124,7 +124,7 @@ All five are local-only. None of them get written to until Defender actually fir
 
 ## Tests
 
-The plugin ships a QA fixture regression suite that exercises 12 canonical inputs (benign / realistic-attack / tricky-FP) against the live classifier:
+The plugin ships a QA fixture regression suite that exercises 13 canonical inputs (benign / realistic-attack / tricky-FP) against the live classifier:
 
 ```bash
 cd plugins/security/stackone-defender
