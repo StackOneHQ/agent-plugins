@@ -1,0 +1,27 @@
+{
+  "prompt": "For a paginated list action using cursor pagination in a connector YAML, how do I carry the cursor from one page to the next, and what should the step return so the engine requests the following page?",
+  "skill": "stackone-unified-connectors",
+  "skill_should_fire": true,
+  "skill_note": "Pagination configuration is named in the unified-connectors description; stackone-cli may also take it. Either may fire; the outcome is what counts.",
+  "fetch": [
+    {
+      "name": "fetches-paginated-request-docs",
+      "match": "docs\\.stackone\\.com/connector-yaml-reference/step-functions/paginated-request",
+      "note": "The paginated_request step function reference."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-cursor",
+      "match": "cursor",
+      "note": "The pagination position carried between pages."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The paginated_request step function handles pagination; it takes a cursor input that carries the position (offset, page number or cursor token) over from the previous page.",
+    "Its configuration has a section controlling how subsequent pages are requested, including the request field that carries the page token, offset or number.",
+    "It also has a section controlling how each page response is parsed, which selects the data array and where the next cursor is read from."
+  ]
+}

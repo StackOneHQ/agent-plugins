@@ -1,0 +1,27 @@
+{
+  "prompt": "Does StackOne connect to SAP ERP?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "Which providers exist is connectors territory.",
+  "fetch": [
+    {
+      "name": "fetches-sap-connector-page",
+      "match": "docs\\.stackone\\.com/connectors/saps4hana",
+      "note": "The SAP S/4HANA connector page."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "names-s4hana",
+      "match": "S/4HANA",
+      "note": "The connector's name."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Yes: StackOne has an SAP S/4HANA connector.",
+    "It authenticates with OAuth 2.0 through a connector profile, and its page lists the available actions.",
+    "The reply points to the connector page rather than guessing at capabilities."
+  ]
+}

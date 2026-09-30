@@ -1,0 +1,16 @@
+{
+  "prompt": "Where do I create a StackOne API key, and does it belong to my whole organisation or just one project?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "API key setup is a platform question, so the skill should fire.",
+  "fetch": [
+    {
+      "name": "fetches-api-keys-page",
+      "match": "embed/api-keys",
+      "note": "The skill routes key management to the API Keys page."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [],
+  "no_reply": []
+}

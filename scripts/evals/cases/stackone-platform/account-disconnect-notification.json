@@ -1,0 +1,33 @@
+{
+  "prompt": "Our Bullhorn OAuth connection in StackOne disconnected without warning. Is there a way to get notified when a linked account goes down, instead of finding out when calls start failing?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Account lifecycle webhooks are platform territory.",
+  "fetch": [
+    {
+      "name": "fetches-account-events-docs",
+      "match": "docs\\.stackone\\.com/(embed/handle-account-events|connect/webhooks)",
+      "note": "The Handle Account Events guide or the Webhooks page."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-webhooks",
+      "match": "[Ww]ebhook",
+      "note": "Account status changes are delivered by webhook."
+    },
+    {
+      "name": "names-account-events",
+      "match": "account\\.(created|updated|deleted)|account events",
+      "note": "The events are subscribed by name on the webhook."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Account lifecycle events are delivered by webhook, so the backend can react to a connection or disconnection instead of polling.",
+    "Account events are subscribed on the webhook itself, not on a connector profile, by setting the webhook's events array (account.created, account.updated, account.deleted) when creating or updating it.",
+    "The event payload carries the event name, account_id, provider and the origin identifiers, and the receiver should verify the signature before acting.",
+    "The docs describe account events as covering a user connecting or disconnecting; the reply maps the disconnection onto those events rather than inventing a separate alerting feature."
+  ]
+}

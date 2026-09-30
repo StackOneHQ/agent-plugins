@@ -1,0 +1,28 @@
+{
+  "prompt": "Are Workday documents exposed through StackOne, for example when I use the Workday connector over MCP?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "What a provider's actions cover is connectors territory. The support reply on record said no document management; the page now lists document actions, so the case tests answering from the page over memory.",
+  "fetch": [
+    {
+      "name": "fetches-workday-page",
+      "match": "docs\\.stackone\\.com/connectors/workday",
+      "note": "The Workday connector page lists its actions."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "names-a-document-action",
+      "match": "workday_[a-z_]*document[a-z_]*",
+      "note": "The document actions listed on the page."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The Workday connector page lists worker document actions, such as getting a worker's documents, putting a worker document and listing year-end documents.",
+    "Custom reports are also available as actions (execute custom report).",
+    "Over MCP the same actions are exposed as tools, subject to what the connector profile enables.",
+    "The reply answers from the connector page's action list rather than from memory."
+  ]
+}

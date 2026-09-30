@@ -1,0 +1,21 @@
+{
+  "prompt": "How does StackOne's Data Sync work and how do I set one up for a linked account?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Data Sync is part of the Platform API, so the skill should fire even though its map has no row for it.",
+  "fetch": [
+    {
+      "name": "consults-the-index",
+      "match": "docs\\.stackone\\.com/llms\\.txt",
+      "note": "The skill's map does not list Data Sync, so the agent must find it through the index. This is the durability rule under test."
+    },
+    {
+      "name": "fetches-a-data-sync-page",
+      "match": "[Dd]ata[-_]?[Ss]ync",
+      "note": "Having searched the index, the agent reads a Data Sync page rather than answering from memory."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [],
+  "no_reply": []
+}

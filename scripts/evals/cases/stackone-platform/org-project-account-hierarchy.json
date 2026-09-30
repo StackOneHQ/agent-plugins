@@ -1,0 +1,28 @@
+{
+  "prompt": "We're an OEM customer with one StackOne organisation. How should we use organisations, projects and accounts to keep each of our customers isolated and to keep dev and prod separate?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Organisation, project and account structure is platform territory.",
+  "fetch": [
+    {
+      "name": "fetches-hierarchy-docs",
+      "match": "docs\\.stackone\\.com/(gateway/concepts/(overview|organizations-and-projects)|features/multi-tenant-accounts)",
+      "note": "The concepts pages or the multi-tenant accounts guide."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-projects",
+      "match": "[Pp]roject",
+      "note": "Projects are the unit of isolation for environments."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The hierarchy is organisation, then projects, then linked accounts.",
+    "Projects are isolated workspaces with their own region, API keys and linked accounts, so environments such as dev and prod belong in separate projects.",
+    "Members and security (roles, MFA, SSO) are managed at the organisation level; organisation Admins see every project and Members only the projects they are granted.",
+    "Customers are kept apart within a project by the owner identifiers (origin_owner_id) on their linked accounts."
+  ]
+}

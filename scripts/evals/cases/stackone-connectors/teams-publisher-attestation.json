@@ -1,0 +1,21 @@
+{
+  "prompt": "Can StackOne handle Microsoft Teams publisher attestation for our integration, or do we have to do that ourselves?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": false,
+  "skill_note": "No skill covers partner or legal processes. The right answer is to say so and point to support.",
+  "fetch": [],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "points-to-support",
+      "match": "[Cc]ontact (StackOne('s)? )?[Ss]upport|StackOne [Ss]upport|support team",
+      "note": "The docs name the channel as StackOne support."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Publisher attestation is not covered by the documentation, so the reply says so.",
+    "The reply suggests contacting StackOne support.",
+    "The reply does not state what StackOne will or will not do about attestation as if it were documented."
+  ]
+}

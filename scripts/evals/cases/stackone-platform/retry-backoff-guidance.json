@@ -1,0 +1,28 @@
+{
+  "prompt": "When StackOne returns a 429 or a 502, how many times should I retry and with what backoff? Is retrying after one second too soon?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Rate limits and error handling are platform territory.",
+  "fetch": [
+    {
+      "name": "fetches-rate-limiting-page",
+      "match": "docs\\.stackone\\.com/platform-api/rate-limiting",
+      "note": "The page that documents 429, Retry-After and StackOne's own retries."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-retry-after",
+      "match": "Retry-After",
+      "note": "The header that says how long to wait."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "API keys are rate limited per minute and exceeding the limit returns 429 Too Many Requests with a Retry-After header.",
+    "The client should read the 429 and the Retry-After header and back off for at least that long before retrying; retrying immediately is the wrong approach.",
+    "For provider rate limits, StackOne retries on the caller's behalf: up to five consecutive attempts using the provider's Retry-After, within a 60-second request lifetime, returning 408 Request Timeout if that is exceeded, so the client does not need provider-specific retry logic.",
+    "The docs do not prescribe a client-side retry count or backoff schedule beyond honouring Retry-After; the reply may recommend one but does not present it as StackOne's documented policy."
+  ]
+}
