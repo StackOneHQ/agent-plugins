@@ -14,7 +14,7 @@ permissions:
 jobs:
   validate:
     name: Validate marketplace.json
-    runs-on: ubuntu-latest
+    runs-on: warp-ubuntu-latest-x64-2x
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
