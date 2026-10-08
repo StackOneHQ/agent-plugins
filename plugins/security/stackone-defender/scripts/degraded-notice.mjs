@@ -1,20 +1,19 @@
-import { readFileSync, writeFileSync } from "fs";
+import { closeSync, openSync } from "fs";
+import { join } from "path";
 
 /**
- * Whether this session should be told the classifier is unavailable. Records the session
- * id, so the notice shows once per session rather than on every tool call.
+ * Whether this session should be told the classifier is unavailable. One marker file per
+ * session, created with `wx`, so concurrent sessions and parallel hooks each claim it once.
+ * Without a session id there is nothing to key on, so no notice.
  */
-export function claimDegradedNotice(path, sessionId) {
-  const key = sessionId ?? "unknown";
+export function claimDegradedNotice(dir, sessionId) {
+  if (!sessionId) return false;
+  const path = join(dir, `defender-degraded-${String(sessionId).replace(/[^\w-]/g, "_")}`);
   try {
-    if (readFileSync(path, "utf8") === key) return false;
-  } catch {
-    // No record yet.
+    closeSync(openSync(path, "wx"));
+    return true;
+  } catch (err) {
+    // Unrecordable for any reason other than an existing claim: noisy, never silent.
+    return err.code !== "EEXIST";
   }
-  try {
-    writeFileSync(path, key);
-  } catch {
-    // Unrecorded, so the next scan notifies again: noisy, never silent.
-  }
-  return true;
 }

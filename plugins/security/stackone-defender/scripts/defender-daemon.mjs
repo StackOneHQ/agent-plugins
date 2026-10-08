@@ -19,6 +19,8 @@ import { unlinkSync, existsSync, readFileSync, appendFileSync, writeFileSync, mk
 const PROTOCOL_VERSION = 1;
 const IDLE_TIMEOUT_MS = 10 * 60 * 1000; // 10 min
 const UPTIME_CAP_MS = 12 * 60 * 60 * 1000; // 12 hours — graceful self-restart bound
+// Without Tier 2, restart sooner so a transient load failure (e.g. mid-install) recovers.
+const DEGRADED_UPTIME_CAP_MS = 10 * 60 * 1000;
 const LOG_SIZE_CAP_BYTES = 5 * 1024 * 1024; // 5 MB before rotation
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -146,7 +148,7 @@ let tier2Ready;
 try {
   ({ defense, tier2Ready } = await buildDefense(PromptDefense, defenseOptions, log));
 } catch (err) {
-  fatal("warmupTier2 failed", err);
+  fatal("failed to build defense", err);
 }
 log("warmup complete", { tier2Ready });
 
@@ -161,7 +163,7 @@ function maybeExit() {
     shutdown(0);
     return;
   }
-  if (Date.now() - startedAtMs >= UPTIME_CAP_MS) {
+  if (Date.now() - startedAtMs >= (tier2Ready ? UPTIME_CAP_MS : DEGRADED_UPTIME_CAP_MS)) {
     log("uptime cap reached, shutting down");
     shutdown(0);
     return;

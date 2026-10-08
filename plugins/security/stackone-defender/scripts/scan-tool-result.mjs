@@ -29,7 +29,7 @@ import {
   LOCK_PATH,
   STATE_PATH,
   CLIENT_LOG as CLIENT_STDERR_LOG,
-  DEGRADED_NOTICE_PATH,
+  DEGRADED_NOTICE_DIR,
 } from "./daemon-paths.mjs";
 
 const depsFingerprint = () => computeDepsFingerprint(pluginRoot);
@@ -496,10 +496,11 @@ async function main() {
   const { result, tier2Ready } = scan;
 
   const notes = [];
-  if (!tier2Ready && claimDegradedNotice(DEGRADED_NOTICE_PATH, data.session_id)) {
+  if (!tier2Ready && claimDegradedNotice(DEGRADED_NOTICE_DIR, data.session_id)) {
     notes.push(
       `[Defender] The ML classifier failed to load, so tool output is only checked against ` +
-        `known injection patterns and subtle prompt injections will not be caught. Tell the ` +
+        `known injection patterns: subtle prompt injections will not be caught, and files that ` +
+        `only discuss prompt injection may be flagged. Tell the ` +
         `user once: Defender is degraded; \`node ${DAEMON_SCRIPT} --status\` and ` +
         `~/.claude/defender-daemon.log show the cause.`,
     );

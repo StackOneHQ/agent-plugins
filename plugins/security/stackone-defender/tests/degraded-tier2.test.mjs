@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -65,10 +65,47 @@ test("the Tier 1 fallback still allows benign prose", async () => {
   assert.equal(result.allowed, true);
 });
 
-test("the degraded notice is claimed once per session", () => {
-  const path = join(mkdtempSync(join(tmpdir(), "defender-notice-")), "notice");
+test("the Tier 1 fallback flags text that only discusses an injection phrase", async () => {
+  // Accepted cost of degraded mode: without the classifier, patterns cannot tell an attack
+  // from a file describing one. The degraded notice warns about this.
+  const { defense } = await buildDefense(
+    PromptDefense,
+    withModelPath(join(tmpdir(), "no-such-defender-model")),
+    () => {},
+  );
 
-  assert.equal(claimDegradedNotice(path, "session-a"), true);
-  assert.equal(claimDegradedNotice(path, "session-a"), false);
-  assert.equal(claimDegradedNotice(path, "session-b"), true);
+  const result = await defense.defendToolResult(
+    { output: '// Fixture: an attack that says "ignore all previous instructions" to the agent.' },
+    "Read",
+  );
+
+  assert.equal(result.allowed, false);
+});
+
+test("the degraded notice is claimed once per session", () => {
+  const dir = mkdtempSync(join(tmpdir(), "defender-notice-"));
+
+  assert.equal(claimDegradedNotice(dir, "session-a"), true);
+  assert.equal(claimDegradedNotice(dir, "session-a"), false);
+});
+
+test("concurrent sessions each get the notice once", () => {
+  const dir = mkdtempSync(join(tmpdir(), "defender-notice-"));
+
+  const claims = ["a", "b", "a", "b"].map((id) => claimDegradedNotice(dir, `session-${id}`));
+
+  assert.deepEqual(claims, [true, true, false, false]);
+});
+
+test("a hook call without a session id gets no notice", () => {
+  const dir = mkdtempSync(join(tmpdir(), "defender-notice-"));
+
+  assert.equal(claimDegradedNotice(dir, undefined), false);
+});
+
+test("a session id cannot write outside the marker directory", () => {
+  const dir = mkdtempSync(join(tmpdir(), "defender-notice-"));
+
+  assert.equal(claimDegradedNotice(dir, "../../escape"), true);
+  assert.deepEqual(readdirSync(dir), ["defender-degraded-______escape"]);
 });
