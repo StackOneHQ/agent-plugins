@@ -1,0 +1,27 @@
+{
+  "prompt": "Does the Workday connector support user-level impersonation, so that actions run with a specific user's permissions?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "A provider's authentication options are connectors territory.",
+  "fetch": [
+    {
+      "name": "fetches-workday-docs",
+      "match": "docs\\.stackone\\.com/connectors/workday",
+      "note": "The Workday connector page or one of its connector-profile guides."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "names-user-login-flow",
+      "match": "[Uu]ser login flow",
+      "note": "The auth types that authenticate as a user."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Workday offers OAuth 2.0 user login flow profiles, managed and unmanaged, that authenticate the linked account as a specific user through login.",
+    "The OAuth 2.0 static refresh token profile is scoped to an individual user and API client.",
+    "Actions therefore run under the user the account was authenticated as; the docs do not describe a separate impersonation switch."
+  ]
+}

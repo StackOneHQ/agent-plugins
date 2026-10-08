@@ -1,0 +1,22 @@
+{
+  "prompt": "My StackOne API call is returning 401 Unauthorized. I am sending my API key in the Authorization header. What is wrong and where is the current authentication documentation?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "A 401 from the StackOne API is a platform question, so the skill should fire.",
+  "fetch": [
+    {
+      "name": "fetches-current-auth-page",
+      "match": "platform-api/authentication",
+      "note": "The skill sends the agent to the current authentication page."
+    }
+  ],
+  "no_fetch": [
+    {
+      "name": "avoids-dead-auth-page",
+      "match": "overview/authentication",
+      "note": "The agent never fetches the retired `/overview/authentication` page, which returns 404."
+    }
+  ],
+  "reply": [],
+  "no_reply": []
+}

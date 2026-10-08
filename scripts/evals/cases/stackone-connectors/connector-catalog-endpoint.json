@@ -1,0 +1,28 @@
+{
+  "prompt": "Is there an endpoint I can call to list every connector StackOne supports and the actions each one has? I want to show my customers what they can integrate without scraping your website every few weeks.",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "Discovering connectors and actions is connectors territory; the reference endpoints are platform territory. Either may fire; the outcome is what counts.",
+  "fetch": [
+    {
+      "name": "fetches-catalog-docs",
+      "match": "docs\\.stackone\\.com/(platform/api-reference/v2/connectors/(list-connectors|get-connector|get-connector-action)|embed/call-actions/rpc-http|features/actions-metadata-for-custom-uis)",
+      "note": "The v2 Connectors reference, the RPC page that documents GET /actions, or the Actions Metadata for Custom UIs guide."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "names-an-endpoint",
+      "match": "/connectors|/actions",
+      "note": "The endpoints that list connectors and actions."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The v2 Connectors endpoints list connectors and return a connector's actions (List Connectors, Get Connector, Get Connector Action).",
+    "GET /actions lists the actions available to call, which is the documented way to discover them before making an RPC call.",
+    "The Actions Metadata for Custom UIs guide covers building exactly this kind of catalogue interface from the API.",
+    "The reply does not tell the user to scrape the website."
+  ]
+}

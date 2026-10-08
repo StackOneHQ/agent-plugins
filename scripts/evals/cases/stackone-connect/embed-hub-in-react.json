@@ -1,0 +1,41 @@
+{
+  "prompt": "How do I embed the StackOne integration picker in my React app so customers can connect their HR system? Show me the code for both the backend and the React side.",
+  "max_turns": 16,
+  "skill": "stackone-connect",
+  "skill_should_fire": true,
+  "skill_note": "Embedding the Hub and linking accounts is stackone-connect territory. Whether it fired is reported, not scored; the checks below are the outcome a user needs.",
+  "fetch": [
+    {
+      "name": "fetches-account-linking-docs",
+      "match": "docs\\.stackone\\.com/(embed/(account-linking|connect-session)|guides/(connect-tools-overview|embedding-stackone-hub)|platform/api-reference/connect-sessions/create-connect-session)",
+      "note": "The Hub and Connect Session pages under Embed, the older guide paths that redirect to them, or the Create Connect Session reference."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "names-hub-package",
+      "match": "@stackone/hub",
+      "note": "The React component ships as the @stackone/hub package."
+    },
+    {
+      "name": "creates-connect-session",
+      "match": "connect_sessions|[Cc]onnect [Ss]ession",
+      "note": "The backend must mint a connect session token for the Hub to initialise with."
+    },
+    {
+      "name": "uses-origin-owner-id",
+      "match": "origin_owner_id",
+      "note": "The session request identifies the customer by origin_owner_id."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The backend creates a connect session by calling POST /connect_sessions with the StackOne API key, sending origin_owner_id to identify the customer's organisation.",
+    "The response carries a token, and the backend returns that token to the frontend.",
+    "The frontend installs @stackone/hub and renders the StackOneHub component with that token.",
+    "The Hub's onSuccess callback receives the linked account id, which the app persists for later action calls.",
+    "The API key stays on the backend and is never sent to the browser.",
+    "origin_owner_id is set server-side, never taken from the client request."
+  ]
+}

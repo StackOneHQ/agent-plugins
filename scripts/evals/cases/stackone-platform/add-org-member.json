@@ -1,0 +1,27 @@
+{
+  "prompt": "I seem to be the only user on our StackOne account. How do I add another person from my company to our organisation?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Team management sits under Secure in the docs; the platform skill is the nearest owner.",
+  "fetch": [
+    {
+      "name": "fetches-manage-team-page",
+      "match": "docs\\.stackone\\.com/secure/identity-and-access/manage-team",
+      "note": "The page that documents inviting members and roles."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-invite-or-admin",
+      "match": "[Ii]nvite|[Aa]dmin",
+      "note": "Admins invite members."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Organisation Admins invite members from the organisation's Members settings.",
+    "There are two independent role layers: an organisation role (Admin or Member) and per-project roles assigned separately.",
+    "Organisation Admins see every project; Members only see the projects they are granted, directly or through a group."
+  ]
+}

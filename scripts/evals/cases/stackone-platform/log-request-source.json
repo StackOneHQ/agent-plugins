@@ -1,0 +1,27 @@
+{
+  "prompt": "In the request logs, how can I tell what originated a call: which API key it was, whether it was a session token, or which OAuth user?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Logs are platform territory. The List Logs reference documents the fields that answer this; the reply has to use them rather than guess.",
+  "fetch": [
+    {
+      "name": "fetches-logs-docs",
+      "match": "docs\\.stackone\\.com/(platform/api-reference/logs/list-logs|features/observability)",
+      "note": "The List Logs reference or the observability guides."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "names-auth-or-source-fields",
+      "match": "auth_type|auth_id|source_type|source_id",
+      "note": "The documented fields that say what authenticated a call and where it came from."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The List Logs reference documents auth_type and auth_id, which identify what authenticated the call, such as an API key or a session.",
+    "It also documents source_type, source_id and source_value, which describe where the call came from, and session_id, agent_id and origin_owner_id.",
+    "The reply sticks to fields the reference lists; if they do not give the user what they need, it suggests contacting StackOne support rather than inventing more."
+  ]
+}

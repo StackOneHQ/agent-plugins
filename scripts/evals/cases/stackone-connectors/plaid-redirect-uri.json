@@ -1,0 +1,27 @@
+{
+  "prompt": "I'm setting up a Plaid connector profile. The docs say I need to enter a redirect URI that goes to my app. Is that my platform, or my Plaid app? And why isn't it the StackOne callback URL I used for QuickBooks?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "Connectors territory, but the Plaid page does not answer it. Under the rule agreed on 2026-09-28, an undocumented answer is 'not covered, contact support', even if a general OAuth answer would be right.",
+  "fetch": [
+    {
+      "name": "checked-the-docs",
+      "match": "docs\\.stackone\\.com/(llms\\.txt|connectors/plaid)",
+      "note": "The index or the Plaid page."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "points-to-support",
+      "match": "[Cc]ontact (StackOne('s)? )?[Ss]upport|StackOne [Ss]upport|support team",
+      "note": "The docs name the channel as StackOne support."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The Plaid connector page does not explain which redirect URI to enter, so the reply says the docs do not specify it.",
+    "The reply suggests contacting StackOne support rather than asserting an answer as documented.",
+    "The reply may explain in general terms how OAuth redirect URIs work, but does not present a Plaid-specific answer as coming from the docs."
+  ]
+}

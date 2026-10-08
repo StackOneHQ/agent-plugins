@@ -1,0 +1,28 @@
+{
+  "prompt": "One of our linked accounts in StackOne shows a status of expired. What does that mean and what should we do about it?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Interpreting a linked account's status is a platform question, so the skill should fire.",
+  "fetch": [
+    {
+      "name": "fetches-v2-accounts-reference",
+      "match": "api-reference/v2/accounts",
+      "note": "Status values live in the accounts reference, which the skill points to rather than restating."
+    }
+  ],
+  "no_fetch": [
+    {
+      "name": "avoids-v1-accounts-reference",
+      "match": "api-reference/accounts/list-accounts",
+      "note": "The uncatalogued v1 reference must not be used. The v2 path has `/v2/` in it and does not match this pattern."
+    }
+  ],
+  "reply": [],
+  "no_reply": [
+    {
+      "name": "no-legacy-field-names",
+      "match": "origin_owner_id",
+      "note": "The reply does not use the retired `origin_owner_id` field name."
+    }
+  ]
+}
