@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, readdirSync, readFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -124,4 +124,31 @@ test("a session id cannot write outside the marker directory", () => {
 
   assert.equal(claimDegradedNotice(dir, "../../escape"), true);
   assert.deepEqual(readdirSync(dir), ["defender-degraded-______escape"]);
+});
+
+test("claiming a notice prunes markers older than a week", () => {
+  const dir = mkdtempSync(join(tmpdir(), "defender-notice-"));
+  const old = join(dir, "defender-degraded-old");
+  writeFileSync(old, "");
+  const eightDaysAgo = (Date.now() - 8 * 24 * 60 * 60 * 1000) / 1000;
+  utimesSync(old, eightDaysAgo, eightDaysAgo);
+  writeFileSync(join(dir, "defender-degraded-recent"), "");
+
+  claimDegradedNotice(dir, "session-new");
+
+  assert.deepEqual(readdirSync(dir).sort(), ["defender-degraded-recent", "defender-degraded-session-new"]);
+});
+
+test("warmup warnings are logged even when warmup throws", async () => {
+  class ThrowingDefense {
+    async warmupTier2() {
+      console.warn(new Error("onnxruntime binding missing"));
+      throw new Error("boom");
+    }
+  }
+  const logged = [];
+
+  await assert.rejects(buildDefense(ThrowingDefense, {}, (msg, extra) => logged.push([msg, extra])));
+
+  assert.deepEqual(logged, [["warmup warnings", { warnings: ["onnxruntime binding missing"] }]]);
 });
