@@ -18,3 +18,5 @@ export const STATE_PATH = join(DIR, `${NAME}-daemon.json`);
 export const DAEMON_LOG = join(DIR, `${NAME}-daemon.log`);
 // Separate from the daemon log so client appends don't race the daemon's rotation.
 export const CLIENT_LOG = join(DIR, `${NAME}-client.log`);
+// Holds the per-session markers for the "classifier unavailable" notice.
+export const DEGRADED_NOTICE_DIR = DIR;

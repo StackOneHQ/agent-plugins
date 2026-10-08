@@ -86,7 +86,7 @@ Default thresholds and the model path live in `scripts/defender-daemon.config.js
 }
 ```
 
-`enableTier1` is off by default. Tier 1 (regex patterns) is brittle and high-FP on prose discussing attacks. Tier 2 (the multihead ONNX classifier) is the sole decision-maker. `useSfe` turns on the Semantic Field Extractor (SFE), which drops metadata and identifier fields before Tier 2 scores the payload. For how Tier 1, Tier 2 and the Semantic Field Extractor work, see [Defender](https://docs.stackone.com/secure/defender) in the StackOne docs.
+`enableTier1` is off by default. Tier 1 (regex patterns) is brittle and high-FP on prose discussing attacks. Tier 2 (the multihead ONNX classifier) is the sole decision-maker, unless it fails to load (see [Troubleshooting](#troubleshooting)). `useSfe` turns on the Semantic Field Extractor (SFE), which drops metadata and identifier fields before Tier 2 scores the payload. For how Tier 1, Tier 2 and the Semantic Field Extractor work, see [Defender](https://docs.stackone.com/secure/defender) in the StackOne docs.
 
 The daemon reads this config only on startup, and it is a detached long-lived process that outlives your shell. To pick up config changes, stop the running daemon (look up the PID in `~/.claude/defender-daemon.json` and `kill` it, or delete `~/.claude/defender.sock` plus `~/.claude/defender-daemon.json`) and the next tool call will spawn a fresh daemon with the new config.
 
@@ -106,8 +106,9 @@ The daemon reads this config only on startup, and it is a detached long-lived pr
 | `~/.claude/defender-daemon.log` | Daemon stderr (rotated) |
 | `~/.claude/defender-client.log` | Hook-side errors (transient) |
 | `~/.claude/defender-daemon.lock` | Spawn-time lockfile (transient) |
+| `~/.claude/defender-degraded-<session>` | Marks that a session was told the classifier is unavailable (empty, one per session) |
 
-All five are local-only. None of them get written to until Defender actually fires.
+All six are local-only. None of them get written to until Defender actually fires.
 
 > [!NOTE]
 > Older versions wrote `~/.claude/defender-feedback.jsonl` and read `~/.claude/defender-collector.json` for an internal FP-labeling loop. Both are gone from v2.6 onward; if either file is on your machine from an older install, it's harmless and can be deleted.
@@ -120,7 +121,7 @@ All five are local-only. None of them get written to until Defender actually fir
 
 **Daemon won't start.** Delete `~/.claude/defender.sock`, `~/.claude/defender-daemon.json`, and `~/.claude/defender-daemon.lock`, then retry. The hook recovers from stale state automatically but a manual clean is occasionally faster.
 
-**Architecture without `onnxruntime-node` binaries.** Rare on macOS / Linux x86_64 / arm64, but if you hit it, the daemon falls back to a smaller MLP head. Detection quality is lower; raise an issue with your platform string.
+**The ML classifier can't load** (for example, a platform without `onnxruntime-node` binaries, or a missing model file). The daemon turns on Tier 1 pattern matching instead, so overt injections are still flagged but subtle ones are not, and Claude is told once per session that Defender is degraded. Run `node <plugin dir>/scripts/defender-daemon.mjs --status`: `tier2Ready: false` confirms it, and `~/.claude/defender-daemon.log` has the load error. Raise an issue with your platform string.
 
 ## Tests
 
