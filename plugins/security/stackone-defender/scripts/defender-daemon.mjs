@@ -11,6 +11,7 @@ import { createRequire } from "module";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { createServer } from "net";
+import { buildDefense } from "./build-defense.mjs";
 import { depsFingerprint as computeDepsFingerprint } from "./deps-fingerprint.mjs";
 import { SOCKET_PATH, DAEMON_LOG, STATE_PATH as DAEMON_STATE } from "./daemon-paths.mjs";
 import { unlinkSync, existsSync, readFileSync, appendFileSync, writeFileSync, mkdirSync, statSync, renameSync } from "fs";
@@ -81,6 +82,7 @@ if (process.argv[2] === "--status") {
     lines.push(`  pid:              ${state.pid}`);
     lines.push(`  defenderVersion:  ${state.defenderVersion}`);
     lines.push(`  protocolVersion:  ${state.protocolVersion}`);
+    lines.push(`  tier2Ready:       ${state.tier2Ready ?? "unknown"}`);
     lines.push(`  startedAt:        ${state.startedAt}`);
     lines.push(`  socket:           ${state.socket}`);
     lines.push(`  socket exists:    ${existsSync(state.socket)}`);
@@ -139,13 +141,14 @@ function resolvePlaceholders(value) {
 const defenseOptions = resolvePlaceholders(rawConfig);
 log("starting daemon", { defenderVersion, defenseOptions });
 
-const defense = new PromptDefense(defenseOptions);
+let defense;
+let tier2Ready;
 try {
-  await defense.warmupTier2();
+  ({ defense, tier2Ready } = await buildDefense(PromptDefense, defenseOptions, log));
 } catch (err) {
   fatal("warmupTier2 failed", err);
 }
-log("warmup complete");
+log("warmup complete", { tier2Ready });
 
 const startedAtMs = Date.now();
 let lastActivity = Date.now();
@@ -255,7 +258,7 @@ async function handleLine(line, socket) {
   inFlight++;
   try {
     const result = await defense.defendToolResult(req.payload, req.toolName ?? "tool-result");
-    socket.write(JSON.stringify({ type: "result", id: req.id, result }) + "\n");
+    socket.write(JSON.stringify({ type: "result", id: req.id, result, tier2Ready }) + "\n");
   } catch (err) {
     log("scan error", { error: err.message });
     socket.write(JSON.stringify({ type: "error", id: req.id, error: err.message }) + "\n");
@@ -277,6 +280,7 @@ server.listen(SOCKET_PATH, () => {
       // that this daemon predates a dependency change and needs replacing.
       depsStamp: computeDepsFingerprint(pluginRoot),
       protocolVersion: PROTOCOL_VERSION,
+      tier2Ready,
       startedAt: new Date().toISOString(),
       socket: SOCKET_PATH,
     };
