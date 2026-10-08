@@ -17,7 +17,6 @@ const here = dirname(fileURLToPath(import.meta.url));
 const pluginRoot = resolve(here, "..");
 const requireFrom = createRequire(join(pluginRoot, "package.json"));
 const { PromptDefense } = requireFrom("@stackone/defender");
-const defenderRoot = dirname(requireFrom.resolve("@stackone/defender"));
 
 const shippedConfig = JSON.parse(
   readFileSync(join(pluginRoot, "scripts", "defender-daemon.config.json"), "utf8"),
@@ -37,17 +36,22 @@ const INJECTION = {
 // file would hide the failure being tested. The loadable path is covered by qa-fixtures.
 test("a missing model falls back to Tier 1 and still blocks an overt injection", async () => {
   const messages = [];
+  const logged = {};
 
   const { defense, tier2Ready } = await buildDefense(
     PromptDefense,
     withModelPath(join(tmpdir(), "no-such-defender-model")),
-    (msg) => messages.push(msg),
+    (msg, extra) => {
+      messages.push(msg);
+      logged[msg] = extra;
+    },
   );
   const result = await defense.defendToolResult(INJECTION, "WebFetch");
 
   assert.equal(tier2Ready, false);
   assert.equal(result.allowed, false);
-  assert.deepEqual(messages, ["Tier 2 unavailable, falling back to Tier 1 patterns"]);
+  assert.deepEqual(messages, ["warmup warnings", "Tier 2 unavailable, falling back to Tier 1 patterns"]);
+  assert.match(logged["warmup warnings"].warnings.join("\n"), /no-such-defender-model/);
 });
 
 test("the Tier 1 fallback still allows benign prose", async () => {
@@ -63,6 +67,18 @@ test("the Tier 1 fallback still allows benign prose", async () => {
   );
 
   assert.equal(result.allowed, true);
+});
+
+test("the Tier 1 fallback scans a field with an empty name", async () => {
+  const { defense } = await buildDefense(
+    PromptDefense,
+    withModelPath(join(tmpdir(), "no-such-defender-model")),
+    () => {},
+  );
+
+  const result = await defense.defendToolResult({ "": INJECTION.output }, "WebFetch");
+
+  assert.equal(result.allowed, false);
 });
 
 test("the Tier 1 fallback flags text that only discusses an injection phrase", async () => {

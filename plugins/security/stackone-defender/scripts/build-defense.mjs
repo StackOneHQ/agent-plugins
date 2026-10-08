@@ -8,7 +8,16 @@
  */
 export async function buildDefense(PromptDefense, options, log) {
   const defense = new PromptDefense(options);
-  await defense.warmupTier2();
+  // The library reports why a load failed only through console.warn, which nobody sees.
+  const warnings = [];
+  const consoleWarn = console.warn;
+  console.warn = (...args) => warnings.push(args.join(" "));
+  try {
+    await defense.warmupTier2();
+  } finally {
+    console.warn = consoleWarn;
+  }
+  if (warnings.length > 0) log("warmup warnings", { warnings });
   if (defense.isTier2Ready()) return { defense, tier2Ready: true };
 
   log("Tier 2 unavailable, falling back to Tier 1 patterns");
@@ -18,7 +27,8 @@ export async function buildDefense(PromptDefense, options, log) {
     ...options,
     enableTier1: true,
     enableTier2: false,
-    config: { ...options.config, riskyFields: { fieldNames: [], fieldPatterns: [/./] } },
+    // /^/, not /./, so an empty key ("") is scanned too.
+    config: { ...options.config, riskyFields: { fieldNames: [], fieldPatterns: [/^/] } },
   });
   return { defense: fallback, tier2Ready: false };
 }

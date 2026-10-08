@@ -106,8 +106,9 @@ The daemon reads this config only on startup, and it is a detached long-lived pr
 | `~/.claude/defender-daemon.log` | Daemon stderr (rotated) |
 | `~/.claude/defender-client.log` | Hook-side errors (transient) |
 | `~/.claude/defender-daemon.lock` | Spawn-time lockfile (transient) |
+| `~/.claude/defender-degraded-<session>` | Marks that a session was told the classifier is unavailable (empty, one per session) |
 
-All five are local-only. None of them get written to until Defender actually fires.
+All six are local-only. None of them get written to until Defender actually fires.
 
 > [!NOTE]
 > Older versions wrote `~/.claude/defender-feedback.jsonl` and read `~/.claude/defender-collector.json` for an internal FP-labeling loop. Both are gone from v2.6 onward; if either file is on your machine from an older install, it's harmless and can be deleted.

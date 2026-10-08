@@ -2,8 +2,8 @@
 
 /**
  * PostToolUse hook — thin client that scans tool output via the defender daemon.
- * Reads JSON on stdin, writes one-line JSON to stdout on flagged content,
- * silent-exits otherwise. Self-installs node_modules on first run (the daemon
+ * Reads JSON on stdin, writes one-line JSON to stdout on flagged content or,
+ * once per session, when the classifier is unavailable; silent-exits otherwise. Self-installs node_modules on first run (the daemon
  * needs @stackone/defender resolvable before spawn). Falls back to silent-skip
  * if the daemon is unreachable.
  */
