@@ -1,0 +1,33 @@
+{
+  "prompt": "I want to use StackOne's JobAdder MCP with my AI agent. Should I build the agent first and then connect StackOne, or the other way round? And what do I need to set up on the JobAdder side?",
+  "max_turns": 16,
+  "skill": "stackone-agents",
+  "skill_should_fire": true,
+  "skill_note": "Connecting an agent over MCP is agents territory; the JobAdder setup half belongs to stackone-connectors. Either may fire; the outcome is what counts.",
+  "fetch": [
+    {
+      "name": "fetches-jobadder-docs",
+      "match": "docs\\.stackone\\.com/connectors/jobadder",
+      "note": "The JobAdder connector page or its OAuth connector-profile guide."
+    },
+    {
+      "name": "fetches-mcp-docs",
+      "match": "docs\\.stackone\\.com/(embed/call-actions/mcp|connect/ai-platforms|mcp/quickstart)",
+      "note": "An MCP page, or the older quickstart path that redirects."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-oauth",
+      "match": "OAuth",
+      "note": "JobAdder connects through an OAuth 2.0 connector profile."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Set up StackOne and link the JobAdder account first, then connect the agent to StackOne over MCP; the agent does not need to exist first.",
+    "JobAdder uses OAuth 2.0: register an application in the JobAdder Developer Portal with StackOne's redirect URI and put its Client ID and Client Secret in a JobAdder connector profile.",
+    "Once the account is linked, the agent reaches JobAdder's actions through the StackOne MCP server or the Agent SDK."
+  ]
+}

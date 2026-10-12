@@ -1,0 +1,22 @@
+{
+  "prompt": "We are getting 429 Too Many Requests from api.stackone.com. What are StackOne's rate limits and how should our client handle them? Point me at the current documentation.",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "A 429 from the StackOne API is a platform question, so the skill should fire.",
+  "fetch": [
+    {
+      "name": "fetches-rate-limiting-page",
+      "match": "platform-api/rate-limiting",
+      "note": "The skill sends the agent to the current rate limiting page."
+    }
+  ],
+  "no_fetch": [
+    {
+      "name": "avoids-dead-rate-limits-page",
+      "match": "overview/rate-limits",
+      "note": "The agent never fetches the retired `/overview/rate-limits` page, which returns 404."
+    }
+  ],
+  "reply": [],
+  "no_reply": []
+}

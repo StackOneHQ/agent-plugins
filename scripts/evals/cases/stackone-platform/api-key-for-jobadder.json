@@ -1,0 +1,34 @@
+{
+  "prompt": "I need an API key from StackOne to connect JobAdder. Where do I get one, and what does JobAdder itself need from me?",
+  "max_turns": 16,
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "API keys are platform territory; the JobAdder half belongs to stackone-connectors. Either may fire; the outcome is what counts.",
+  "fetch": [
+    {
+      "name": "fetches-api-keys-page",
+      "match": "docs\\.stackone\\.com/embed/api-keys|docs\\.stackone\\.com/guides/api-keys",
+      "note": "The API Keys page, or its older path that redirects."
+    },
+    {
+      "name": "fetches-jobadder-connector-docs",
+      "match": "docs\\.stackone\\.com/connectors/jobadder",
+      "note": "The JobAdder connector page or its OAuth connector-profile guide."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-oauth-for-jobadder",
+      "match": "OAuth",
+      "note": "JobAdder connects through an OAuth 2.0 connector profile."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "A StackOne API key is created in the dashboard on the API Keys page and is used to call StackOne's API; it is not what JobAdder needs.",
+    "Connecting JobAdder needs an OAuth 2.0 connector profile: register an application in the JobAdder Developer Portal and put its Client ID and Client Secret in the profile.",
+    "The JobAdder application must list StackOne's redirect URI, https://api.stackone.com/connect/oauth2/jobadder/callback.",
+    "The reply keeps the StackOne API key and the JobAdder OAuth credentials distinct."
+  ]
+}

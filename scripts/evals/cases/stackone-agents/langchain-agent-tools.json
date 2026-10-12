@@ -1,0 +1,33 @@
+{
+  "prompt": "How do I add StackOne tools to my LangChain agent in Python so it can list employees from BambooHR? Show me the code.",
+  "skill": "stackone-agents",
+  "skill_should_fire": true,
+  "skill_note": "Putting StackOne tools into an agent framework is stackone-agents territory. Whether it fired is reported, not scored; the checks below are the outcome a user needs.",
+  "fetch": [
+    {
+      "name": "fetches-agent-sdk-or-mcp-docs",
+      "match": "docs\\.stackone\\.com/embed/call-actions/|stackone-ai-python|docs\\.stackone\\.com/mcp/quickstart",
+      "note": "The Agent SDK or MCP pages under Embed, the Python SDK README the skill points at, or the older MCP quickstart path that redirects."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "names-a-documented-package",
+      "match": "stackone-ai|langchain[-_]mcp[-_]adapters",
+      "note": "LangChain reaches StackOne tools through the stackone-ai Python SDK or through the MCP adapters package; both are documented paths."
+    },
+    {
+      "name": "shows-the-langchain-conversion",
+      "match": "to_langchain\\(|MultiServerMCPClient|load_mcp_tools",
+      "note": "The SDK converts with to_langchain(); the MCP path loads tools through the adapters client."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The tools come from the stackone-ai Python package through a StackOneToolSet, or from the StackOne MCP server through LangChain's MCP adapters; either documented path is acceptable.",
+    "Authentication uses the StackOne API key, read from the STACKONE_API_KEY environment variable or passed explicitly.",
+    "Tools are fetched for the linked BambooHR account by its account id, and can be narrowed to BambooHR or to the list-employees action with a filter such as actions=[\"bamboohr_*\"].",
+    "The fetched tools are converted for LangChain with to_langchain() and bound to the chat model, or loaded through the MCP adapters client."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "stackone-agent-plugins-evals",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Host-neutral eval runner for the plugins in this repo. Runs on Node 22+ with no dependencies; the dev dependencies exist only to typecheck.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "prompt": "How do I list the accounts my customers have linked in StackOne? Show me the request and explain the fields that come back on each account.",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Listing linked accounts is a platform question, so the skill should fire.",
+  "fetch": [],
+  "no_fetch": [
+    {
+      "name": "avoids-v1-accounts-reference",
+      "match": "api-reference/accounts/list-accounts",
+      "note": "The agent never fetches the uncatalogued v1 accounts reference. The v2 URL has `/v2/` between `api-reference` and `accounts`, so it does not match this pattern."
+    }
+  ],
+  "reply": [
+    {
+      "name": "uses-v2-accounts-endpoint",
+      "match": "/v2/accounts",
+      "note": "The reply shows the v2 accounts endpoint, which is the only one the docs catalogue."
+    },
+    {
+      "name": "names-connector-field",
+      "match": "`connector`",
+      "note": "The reply names the `connector` field. The v1 reference called it `provider`."
+    },
+    {
+      "name": "names-owner-id-field",
+      "match": "`owner_id`",
+      "note": "The reply names the `owner_id` field. The v1 reference called it `origin_owner_id`."
+    }
+  ],
+  "no_reply": [
+    {
+      "name": "no-legacy-field-names",
+      "match": "origin_owner_id",
+      "note": "The reply does not use the retired `origin_owner_id` field name."
+    }
+  ]
+}

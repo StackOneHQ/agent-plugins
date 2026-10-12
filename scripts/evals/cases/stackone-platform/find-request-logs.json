@@ -1,0 +1,16 @@
+{
+  "prompt": "A StackOne API call for one of our customers failed yesterday and I need to see exactly what happened. Where do I look?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Finding a failed request in the logs is a platform question, so the skill should fire.",
+  "fetch": [
+    {
+      "name": "fetches-troubleshooting-or-logs",
+      "match": "connect/troubleshooting|api-reference/logs/list-logs",
+      "note": "The skill routes log questions to the Troubleshooting guide and the List Logs reference."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [],
+  "no_reply": []
+}

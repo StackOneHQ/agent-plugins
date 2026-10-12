@@ -1,0 +1,33 @@
+{
+  "prompt": "How do I connect Help Scout to Claude through StackOne?",
+  "max_turns": 16,
+  "skill": "stackone-agents",
+  "skill_should_fire": true,
+  "skill_note": "Connecting Claude over MCP is agents territory; the Help Scout linking half belongs to stackone-connectors. Either may fire; the outcome is what counts.",
+  "fetch": [
+    {
+      "name": "fetches-helpscout-docs",
+      "match": "docs\\.stackone\\.com/connectors/helpscout",
+      "note": "The Help Scout connector page or its connector-profile guide."
+    },
+    {
+      "name": "fetches-claude-or-mcp-docs",
+      "match": "docs\\.stackone\\.com/(connect/ai-platforms/claude-desktop|embed/call-actions/mcp|mcp/app-guides/claude-desktop)",
+      "note": "The Claude Desktop guide, an MCP page, or the older guide path that redirects."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-mcp",
+      "match": "MCP",
+      "note": "Claude connects to StackOne over MCP."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "First link a Help Scout account in StackOne through a connector profile of type OAuth 2.0 - Client Credentials.",
+    "Then add StackOne to Claude as a custom connector with the remote MCP server URL https://mcp.stackone.com/mcp, from Customize > Connectors, or Organization settings > Connectors for a team.",
+    "Claude runs the OAuth flow itself; on the consent screen the user picks the project and the linked accounts the client may reach."
+  ]
+}

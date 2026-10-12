@@ -1,0 +1,27 @@
+{
+  "prompt": "In a StackOne connector YAML I'm building a SOAP request body. How do I include an XML element only when the action's input for it is set, and leave it out otherwise?",
+  "skill": "stackone-cli",
+  "skill_should_fire": true,
+  "skill_note": "Custom connector YAML is cli territory.",
+  "fetch": [
+    {
+      "name": "fetches-expression-or-soap-docs",
+      "match": "docs\\.stackone\\.com/connector-yaml-reference/(expression-language|step-functions/soap-request)",
+      "note": "The expression language reference or the soap_request step function."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "uses-present",
+      "match": "present\\(",
+      "note": "The function that tests whether an input is set."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The expression language has a present() function for testing whether an input is set.",
+    "A ternary in an interpolated expression can return the element when present and null when not, for example {{present(inputs.x) ? ... : null}}, and a null value drops the element.",
+    "Fields also accept a condition using present(), for example condition: '{{present(inputs.filter)}}'."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "prompt": "Does StackOne support Workday, and which Workday actions can I call?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "Which providers and actions exist is stackone-connectors territory. Whether it fired is reported, not scored; the checks below are the outcome a user needs.",
+  "fetch": [
+    {
+      "name": "fetches-workday-connector-page",
+      "match": "docs\\.stackone\\.com/connectors/workday",
+      "note": "The Workday connector page lists its actions. The connectors index alone cannot say which Workday actions exist."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "names-a-workday-action",
+      "match": "workday_[a-z_]+",
+      "note": "Action ids follow provider_operation_entity. A real answer names at least one."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Workday is supported; the StackOne docs list the connector as Workday (Rest and Soap).",
+    "The Workday connector page in the docs lists the actions that are available.",
+    "Actions are named workday_<operation>_<entity>, for example workday_create_employee or workday_get_absence_balance.",
+    "Actions are called through the Actions RPC endpoint, POST /actions/rpc, authenticated with the API key and the linked account's id in the x-account-id header, or through the SDKs and MCP."
+  ]
+}

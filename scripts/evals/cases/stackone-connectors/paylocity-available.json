@@ -1,0 +1,27 @@
+{
+  "prompt": "Is Paylocity available on StackOne, and would I have to build anything myself to use it?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "Which providers exist is connectors territory.",
+  "fetch": [
+    {
+      "name": "fetches-paylocity-page",
+      "match": "docs\\.stackone\\.com/connectors/paylocity",
+      "note": "The Paylocity connector page."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-paylocity",
+      "match": "Paylocity",
+      "note": "The reply has to answer about Paylocity."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Paylocity has a StackOne connector with actions and events, documented on its connector page.",
+    "Using it means creating a connector profile with its authentication method and linking an account; there is no need to build a connector first.",
+    "The reply cites the connector page rather than guessing."
+  ]
+}

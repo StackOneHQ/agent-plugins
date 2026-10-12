@@ -1,0 +1,27 @@
+{
+  "prompt": "I connected SAP S/4HANA with OAuth using a super admin account. I want each of our users to be authorised individually so they only see what they are allowed to see in SAP. How do I set that up?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "Connectors territory, but per-user authorisation for SAP is not documented. The right answer is to say so and point to support.",
+  "fetch": [
+    {
+      "name": "checked-the-docs",
+      "match": "docs\\.stackone\\.com/(llms\\.txt|connectors/saps4hana)",
+      "note": "The index or the SAP S/4HANA page."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "points-to-support",
+      "match": "[Cc]ontact (StackOne('s)? )?[Ss]upport|StackOne [Ss]upport|support team",
+      "note": "The docs name the channel as StackOne support."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The SAP S/4HANA connector page documents OAuth 2.0 connector profiles and does not document per-user authorisation.",
+    "The reply says the docs do not cover it and suggests contacting StackOne support.",
+    "The reply does not invent a field or setting, such as a username field, as the documented way to do it."
+  ]
+}

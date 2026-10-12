@@ -1,0 +1,27 @@
+{
+  "prompt": "The advanced request logs are useful but they contain PII. Is there any redaction, or a way to limit what gets stored?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Platform territory, but redaction is not documented. The right answer is to say so and point to support.",
+  "fetch": [
+    {
+      "name": "checked-the-docs",
+      "match": "docs\\.stackone\\.com/(llms\\.txt|features/observability|platform/api-reference/logs)",
+      "note": "The index, the observability guides or the logs reference."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "points-to-support",
+      "match": "[Cc]ontact (StackOne('s)? )?[Ss]upport|StackOne [Ss]upport|support team",
+      "note": "The docs name the channel as StackOne support."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The docs do not describe a redaction feature for request logs, so the reply says so.",
+    "The reply suggests contacting StackOne support about redaction or storage controls.",
+    "The reply does not describe a redaction setting or option as if it existed."
+  ]
+}

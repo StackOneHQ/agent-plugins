@@ -1,0 +1,27 @@
+{
+  "prompt": "My agent is loading far too many StackOne tools and the context is huge. How do I limit which actions are exposed, or discover the right tool at run time instead of loading everything?",
+  "skill": "stackone-agents",
+  "skill_should_fire": true,
+  "skill_note": "Tool discovery and context size are agents territory.",
+  "fetch": [
+    {
+      "name": "fetches-tool-search-or-scoping-docs",
+      "match": "docs\\.stackone\\.com/(optimize/advanced-tool-search|features/tool-discovery|secure/scoping-connectors)",
+      "note": "Advanced Tool Search, Tool Discovery or Scoping Connectors."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-search-or-scoping",
+      "match": "[Ss]earch|[Ss]cop",
+      "note": "The two documented levers: search-based discovery and scoping the profile."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "Scope the connector profile to only the actions the app uses; that limits every linked account on the profile and shrinks the tool set.",
+    "Use tool search: discover the right action by natural language at run time and then execute it, instead of loading every tool definition into context.",
+    "Loading hundreds of tool definitions burns tokens and hurts tool selection accuracy, which is why the docs recommend search-based discovery."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "prompt": "How do I get notified when one of my customers' StackOne accounts disconnects or its token expires?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Account lifecycle notifications are a platform question, so the skill should fire.",
+  "fetch": [
+    {
+      "name": "fetches-webhooks-or-platform-events",
+      "match": "connect/webhooks|platform-api/platform-events",
+      "note": "The skill routes webhook questions to the Webhooks guide and the Platform Events reference."
+    }
+  ],
+  "no_fetch": [
+    {
+      "name": "avoids-old-webhooks-guide",
+      "match": "guides/webhooks",
+      "note": "The retired guide path only survives on a redirect."
+    }
+  ],
+  "reply": [],
+  "no_reply": []
+}

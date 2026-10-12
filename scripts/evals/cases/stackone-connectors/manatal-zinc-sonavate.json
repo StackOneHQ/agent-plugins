@@ -1,0 +1,44 @@
+{
+  "prompt": "Do you have connectors for Manatal, Zinc and Sonavate?",
+  "skill": "stackone-connectors",
+  "skill_should_fire": true,
+  "skill_note": "Which providers exist is connectors territory. One of the three does not exist, which is the point.",
+  "fetch": [
+    {
+      "name": "fetches-manatal-page",
+      "match": "docs\\.stackone\\.com/connectors/manatal",
+      "note": "Manatal's connector page."
+    },
+    {
+      "name": "fetches-zinc-page",
+      "match": "docs\\.stackone\\.com/connectors/zinc",
+      "note": "Zinc's connector page."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "mentions-manatal",
+      "match": "Manatal",
+      "note": "Exists."
+    },
+    {
+      "name": "mentions-zinc",
+      "match": "Zinc",
+      "note": "Exists."
+    }
+  ],
+  "no_reply": [
+    {
+      "name": "no-invented-sonavate-page",
+      "match": "connectors/sonavate",
+      "note": "There is no Sonavate connector; a URL for one is invention."
+    }
+  ],
+  "reference": [
+    "Manatal has a connector; it uses API token authentication.",
+    "Zinc has a connector; it authenticates with a Zinc Partner API key used as a bearer token.",
+    "Sonavate is not a StackOne connector; the reply says so rather than inventing one.",
+    "The reply checked the current connector docs rather than assuming from memory."
+  ]
+}

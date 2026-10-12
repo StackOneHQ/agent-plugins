@@ -1,0 +1,27 @@
+{
+  "prompt": "I found two connector profiles in my project when I expected one. How can I see which linked accounts are using which connector profile?",
+  "skill": "stackone-platform",
+  "skill_should_fire": true,
+  "skill_note": "Accounts and connector profiles are platform territory.",
+  "fetch": [
+    {
+      "name": "fetches-v2-accounts-reference",
+      "match": "docs\\.stackone\\.com/platform/api-reference/v2/accounts/(list-accounts|get-an-account)",
+      "note": "The v2 accounts reference carries connector_profile_id."
+    }
+  ],
+  "no_fetch": [],
+  "reply": [
+    {
+      "name": "uses-connector-profile-id",
+      "match": "connector_profile_id",
+      "note": "The field that links an account to its profile."
+    }
+  ],
+  "no_reply": [],
+  "reference": [
+    "The v2 List Accounts endpoint returns connector_profile_id on each account.",
+    "List Accounts accepts a connector_profile_id filter, so the accounts on one profile can be listed directly.",
+    "The reply does not invent an audit or profile-usage endpoint that the reference does not list."
+  ]
+}
