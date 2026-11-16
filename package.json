@@ -1,0 +1,15 @@
+{
+  "name": "@stackone/agent-plugins",
+  "version": "3.2.1",
+  "description": "StackOne agent plugins: Claude Code skills for building and operating on StackOne.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StackOneHQ/agent-plugins"
+  },
+  "homepage": "https://docs.stackone.com",
+  "files": [
+    "plugins",
+    ".claude-plugin"
+  ]
+}

@@ -25,6 +25,11 @@
         },
         {
           "type": "json",
+          "path": "plugins/integrations/stackone-dashboard/.claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
           "path": "plugins/integrations/stackone-connect/.claude-plugin/plugin.json",
           "jsonpath": "$.version"
         },

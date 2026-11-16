@@ -1,0 +1,22 @@
+{
+  "name": "stackone-dashboard",
+  "version": "3.2.1",
+  "description": "Understand the StackOne dashboard at app.stackone.com: connector profiles, linked-account statuses, roles and groups, account sharing, tool policies, logs, webhooks and data sync.",
+  "author": {
+    "name": "StackOne",
+    "email": "engineering@stackone.com",
+    "url": "https://stackone.com"
+  },
+  "homepage": "https://docs.stackone.com",
+  "repository": "https://github.com/StackOneHQ/agent-plugins",
+  "license": "MIT",
+  "keywords": [
+    "stackone",
+    "integrations",
+    "dashboard",
+    "connector-profiles",
+    "roles",
+    "policies",
+    "webhooks"
+  ]
+}

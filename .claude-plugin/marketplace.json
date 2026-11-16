@@ -30,6 +30,25 @@
       }
     },
     {
+      "name": "stackone-dashboard",
+      "source": "./plugins/integrations/stackone-dashboard",
+      "description": "Understand the StackOne dashboard: connector profiles, accounts, roles, policies, logs, webhooks, data sync.",
+      "version": "3.2.1",
+      "category": "integrations",
+      "tags": [
+        "stackone",
+        "dashboard",
+        "connector-profiles",
+        "roles",
+        "policies",
+        "webhooks"
+      ],
+      "author": {
+        "name": "StackOne",
+        "email": "engineering@stackone.com"
+      }
+    },
+    {
       "name": "stackone-connect",
       "source": "./plugins/integrations/stackone-connect",
       "description": "Account linking with Connect Sessions and the Hub React component.",
