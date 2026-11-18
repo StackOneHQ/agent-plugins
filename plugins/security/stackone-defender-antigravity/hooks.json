@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/scan-tool-result.mjs"
+            "command": "node ./scripts/scan-tool-result.mjs"
           }
         ]
       }
