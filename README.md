@@ -36,6 +36,8 @@ agy plugin install https://github.com/StackOneHQ/stackone-plugin
 
 Open `/plugin` → **Installed** → **stackone** → **Sign in**. After signing in with your StackOne account, ask “List my connected StackOne accounts.” See the [connector README](https://github.com/StackOneHQ/stackone-plugin#install) for supported hosts and setup.
 
+For on-device scanning of tool results, the catalog also includes a separate [StackOne Defender plugin for Antigravity](plugins/security/stackone-defender-antigravity/#install).
+
 ### Any agent (via Skills CLI)
 
 ```bash
@@ -76,10 +78,11 @@ agent-plugins/
     │   ├── stackone-cli/
     │   └── stackone-unified-connectors/
     └── security/
-        └── stackone-defender/    # ships its own hooks/, scripts/, package.json
+        ├── stackone-defender/             # Claude Code
+        └── stackone-defender-antigravity/ # Google Antigravity
 ```
 
-Each plugin directory contains its own `.claude-plugin/plugin.json`, a `skills/<name>/` folder, and (for `stackone-defender`) the PostToolUse hook config plus ML scripts.
+The Claude Code plugins each have a `.claude-plugin/plugin.json` manifest. The Antigravity variant of Defender has its own `plugin.json` manifest and `hooks.json` configuration.
 
 ## Design Philosophy
 
