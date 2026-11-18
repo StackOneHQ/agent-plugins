@@ -19,4 +19,23 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Validate plugin manifests
-        run: npx --yes @anthropic-ai/claude-code@2.1.234 plugin validate .
+        run: npx --yes @anthropic-ai/claude-code@2.1.311 plugin validate .
+
+  defender:
+    name: Test ${{ matrix.plugin }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        plugin: [stackone-defender, stackone-defender-antigravity]
+    defaults:
+      run:
+        working-directory: plugins/security/${{ matrix.plugin }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm test

@@ -24,7 +24,7 @@ Requires Node ≥ 22 and the Antigravity CLI (`agy`).
 agy plugin install ./plugins/security/stackone-defender-antigravity
 ```
 
-(A marketplace install path will land once the StackOne marketplace registry supports Antigravity. For now, install from the repo.)
+Run `agy plugin list` to confirm the installation.
 
 **2. Trigger the first run.** Use any tool that returns more than ~500 bytes (e.g. read a file, or fetch any URL). The hook self-installs its ML dependencies (`@stackone/defender`, `onnxruntime-node`, `@huggingface/transformers`, `fasttext.wasm`) into the plugin's own `node_modules` on this first call. Expect a one-time 5–10 second pause; subsequent calls reuse a persistent daemon over `~/.claude/defender-antigravity.sock` and complete in low milliseconds.
 
@@ -127,7 +127,7 @@ All five are local-only. None get written to until Defender actually fires.
 
 ## Troubleshooting
 
-**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-antigravity-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd ~/.gemini/config/plugins/stackone-defender-antigravity && npm install` manually. (`$CLAUDE_PLUGIN_ROOT` is set by the host CLI at hook-runtime and is not available in your interactive shell.)
+**Defender doesn't seem to fire.** Tool outputs under 500 bytes are skipped intentionally. Check `~/.claude/defender-antigravity-daemon.log` to confirm the daemon is alive. If the log is empty, the hook may have failed to install dependencies. Run `cd ~/.gemini/config/plugins/stackone-defender-antigravity && npm install` manually.
 
 **Hook receives an unexpected stdin shape.** Antigravity's `PostToolHookArgs` evolved across CLI versions. The hook accepts both proto3-camelCase (`toolName`, `toolResult`, `toolOutput`) and the snake_case fallbacks (`tool_name`, `tool_output`, `tool_response`). If Defender silently does nothing on every call, capture the stdin via a wrapper script and open an issue with the field names you see.
 
@@ -156,7 +156,7 @@ This plugin is versioned on its own, in its `plugin.json` and `package.json`. It
 
 | | Claude Code | Antigravity CLI |
 |---|---|---|
-| Hook entry | `${CLAUDE_PLUGIN_ROOT}/scripts/scan-tool-result.mjs` | same |
+| Hook entry | `${CLAUDE_PLUGIN_ROOT}/scripts/scan-tool-result.mjs` | `./scripts/scan-tool-result.mjs` |
 | Hook event | `PostToolUse` | `PostToolUse` |
 | Stdin envelope | `{tool_name, tool_output, tool_response}` | `{toolName, toolResult, toolOutput}` (proto3-JSON) |
 | Stdout envelope | `{hookSpecificOutput: {hookEventName, additionalContext}}` | `{inject_steps: [{system_message: {text}}]}` |

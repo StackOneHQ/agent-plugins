@@ -24,8 +24,9 @@
   "overrides": {
     "adm-zip": "0.6.1",
     "nanoid": "3.3.18",
+    "onnxruntime-node": "$onnxruntime-node",
     "protobufjs": "7.6.5",
-    "sharp": "0.35.4",
+    "sharp": "0.35.5",
     "tar": "7.5.21"
   }
 }
