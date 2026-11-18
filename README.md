@@ -26,6 +26,16 @@ Agent plugins made by [StackOne](https://stackone.com) — integration infrastru
 /plugin install stackone@stackone-agent-plugins
 ```
 
+### Google Antigravity (hosted MCP connector)
+
+Install the StackOne connector directly from its repository.
+
+```sh
+agy plugin install https://github.com/StackOneHQ/stackone-plugin
+```
+
+Open `/plugin` → **Installed** → **stackone** → **Sign in**. After signing in with your StackOne account, ask “List my connected StackOne accounts.” See the [connector README](https://github.com/StackOneHQ/stackone-plugin#install) for supported hosts and setup.
+
 ### Any agent (via Skills CLI)
 
 ```bash
@@ -47,9 +57,9 @@ npx skills add stackonehq/agent-plugins@stackone-agents
 | [`stackone-connectors`](plugins/integrations/stackone-connectors/) | Integrations | Discover connectors, actions, and integration capabilities | "Which providers does StackOne support?" |
 | [`stackone-unified-connectors`](plugins/integrations/stackone-unified-connectors/) | Integrations | Build unified connectors that transform provider data into standardized schemas | "Start unified build for [provider]", "map fields to schema" |
 | [`stackone-defender`](plugins/security/stackone-defender/) | Security | Detect prompt injection and jailbreak attacks in tool results using local ML | "Scan for prompt injection", "is this text safe?", "protect my agent" |
-| [`stackone`](https://github.com/StackOneHQ/stackone-plugin) | Integrations | StackOne's hosted MCP server as a plugin: search and run actions across every linked account (maintained in its own repo, also listed for Grok Build, Cursor and Codex) | "Use StackOne to create a Jira issue", "list my connected accounts" |
+| [`stackone`](https://github.com/StackOneHQ/stackone-plugin) | Integrations | Search and run actions across linked accounts through StackOne’s hosted MCP server. The plugin lives in its own repository. | "Use StackOne to create a Jira issue", "list my connected accounts" |
 
-Each plugin includes a focused skill, step-by-step workflows, concrete examples, and troubleshooting.
+The integration skills include focused instructions, step-by-step workflows, concrete examples, and troubleshooting.
 
 ## Repository Structure
 
