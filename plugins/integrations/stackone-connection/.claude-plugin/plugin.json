@@ -1,0 +1,21 @@
+{
+  "name": "stackone-connection",
+  "version": "3.2.1",
+  "description": "Connect and set up accounts with the signed-in user's own permissions: link accounts, reconnect broken or expired connectors, choose between connector profiles, and diagnose a new or suspect link.",
+  "author": {
+    "name": "StackOne",
+    "email": "engineering@stackone.com",
+    "url": "https://stackone.com"
+  },
+  "homepage": "https://docs.stackone.com",
+  "repository": "https://github.com/StackOneHQ/agent-plugins",
+  "license": "MIT",
+  "keywords": [
+    "stackone",
+    "integrations",
+    "connection",
+    "account-linking",
+    "reconnect",
+    "connector-profiles"
+  ]
+}

@@ -48,6 +48,24 @@
       }
     },
     {
+      "name": "stackone-connection",
+      "source": "./plugins/integrations/stackone-connection",
+      "description": "Connect and set up accounts: link, reconnect broken connectors, choose connector profiles, and diagnose a new link.",
+      "version": "3.2.1",
+      "category": "integrations",
+      "tags": [
+        "stackone",
+        "connection",
+        "account-linking",
+        "reconnect",
+        "connector-profiles"
+      ],
+      "author": {
+        "name": "StackOne",
+        "email": "engineering@stackone.com"
+      }
+    },
+    {
       "name": "stackone-agents",
       "source": "./plugins/integrations/stackone-agents",
       "description": "Build AI agents that call StackOne-linked accounts via TypeScript/Python SDK, MCP, or A2A.",
