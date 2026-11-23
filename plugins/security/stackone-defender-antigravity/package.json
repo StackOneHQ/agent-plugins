@@ -1,6 +1,6 @@
 {
   "name": "stackone-defender-antigravity",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "On-device prompt-injection detection for Antigravity CLI tool results.",
   "private": true,
   "type": "module",
